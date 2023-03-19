@@ -1,6 +1,6 @@
 # toilet map 🚽
 
-## Documentaion: [Docs](https://docs.google.com/document/d/1TT3aitrW5XcJKMX9dSBovAeyFCXiv20sc8Tfqvx7vw4/edit)
+### Documentaion: [Docs](https://docs.google.com/document/d/1TT3aitrW5XcJKMX9dSBovAeyFCXiv20sc8Tfqvx7vw4/edit)
 ### UML Diagram: [Draw.io](https://app.diagrams.net/#Aphuong.dong.cu%2Ftoilet-map%2Fmain%2FUML%20)
 ### Use case Diagram: [Draw.io](https://app.diagrams.net/#Aphuong.dong.cu%2Ftoilet-map%2Fmain%2FUse%20case)
 
