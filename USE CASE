@@ -1,1 +1,46 @@
-<mxfile host="app.diagrams.net" modified="2023-04-01T12:12:17.732Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.0.0" version="21.0.8" etag="32M_3BML9Wcm3537zHb_" type="gitlab"><diagram name="Stránka-1" id="1iDVNEgMrZ3qHjosj1jY">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2023-04-01T12:17:02.160Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.0.0" etag="zicwtUz1fITO1AAFRYG0" version="21.0.8" type="gitlab">
+  <diagram name="Stránka-1" id="1iDVNEgMrZ3qHjosj1jY">
+    <mxGraphModel dx="1078" dy="1518" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-1" value="Public Toilet Finder" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="344" y="50" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-2" value="Find nearby public toilets" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="100" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-3" value="Filter public toilets by type" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-4" value="Public toilet information" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="300" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-5" value="Rate and review public toilets" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="400" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-6" value="Report issues with public toilets" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="504.5" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-7" value="Receive push notification for nearby public toilets" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="600" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-8" value="Set reminder for restroom use" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="710" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-9" value="Add new public toilets to the app&amp;nbsp;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="820" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-10" value="Saving public toilet to favourites" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="920" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-11" value="Find nearby accessible public toilets based on preferences" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="364" y="1030" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Vb8cQW5wdSUri7FqS5Ni-12" value="Find nearby public toilets with high hygiene ratings" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1070" width="120" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
