@@ -1,4 +1,4 @@
-package cz.cvut.fel.thetronelocator.ui.theme
+package cz.cvut.fel.thethronelocator.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

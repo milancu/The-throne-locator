@@ -1,4 +1,4 @@
-package cz.cvut.fel.thetronelocator
+package cz.cvut.fel.thethronelocator
 
 import org.junit.Test
 

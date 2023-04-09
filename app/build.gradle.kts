@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "cz.cvut.fel.thetronelocator"
+    namespace = "cz.cvut.fel.thethronelocator"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "cz.cvut.fel.thetronelocator"
+        applicationId = "cz.cvut.fel.thethronelocator"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

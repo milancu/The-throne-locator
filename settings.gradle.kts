@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "The Trone Locator"
+rootProject.name = "The Throne Locator"
 include(":app")
  

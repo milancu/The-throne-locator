@@ -1,4 +1,4 @@
-package cz.cvut.fel.thetronelocator.ui.theme
+package cz.cvut.fel.thethronelocator.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TheTroneLocatorTheme(
+fun TheThroneLocatorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
