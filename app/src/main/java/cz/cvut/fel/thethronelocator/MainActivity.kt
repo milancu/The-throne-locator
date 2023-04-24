@@ -2,6 +2,8 @@ package cz.cvut.fel.thethronelocator
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,9 +33,44 @@ class MainActivity: FragmentActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
 
+        getItems();
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    private fun getItems() {
+        // Create a Retrofit instance with the desired base URL
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://www.mapotic.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        // Create a service interface for the API
+        val apiService = retrofit.create(MapoticApiService::class.java)
+
+        // Make the API request to get the GeoJSON data
+        apiService.getGeoJsonData().enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                if (response.isSuccessful) {
+                    val jsonObject = JSONObject(response.body().toString())
+                    geoJsonLayer = GeoJsonLayer(map, jsonObject)
+                } else {
+                    val errorMessage = when (response.code()) {
+                        401 -> "Unauthorized: You are not authorized to access this resource."
+                        404 -> "Not Found: The requested resource was not found."
+                        500 -> "Internal Server Error: The server encountered an unexpected condition."
+                        else -> "Error: Something went wrong. Please try again later."
+                    }
+                    Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 
@@ -91,6 +128,10 @@ class MainActivity: FragmentActivity(), OnMapReadyCallback {
                             clusterManager.addItem(toiletPoint)
                         }
                     }
+
+                    val progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progress)
+                    progressBar.visibility = View.GONE
+                    clusterManager.cluster()
                 } else {
                     val errorMessage = when (response.code()) {
                         401 -> "Unauthorized: You are not authorized to access this resource."
