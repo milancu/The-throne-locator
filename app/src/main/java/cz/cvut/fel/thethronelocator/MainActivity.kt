@@ -3,7 +3,6 @@ package cz.cvut.fel.thethronelocator
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,24 +13,24 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
+import cz.cvut.fel.thethronelocator.databinding.MainBinding
 import cz.cvut.fel.thethronelocator.network.MapoticApi
 import cz.cvut.fel.thethronelocator.repository.ToiletRepository
 
 
 class MainActivity: FragmentActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
+    private val binding: MainBinding by lazy { MainBinding.inflate(layoutInflater) }
     private lateinit var clusterManager: ClusterManager<ToiletPoint>
     private lateinit var viewModel: MapViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main)
+        setContentView(binding.root)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        val progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progress)
 
         val factory = MapViewModelFactory(ToiletRepository(MapoticApi.getInstance()))
 
@@ -40,7 +39,7 @@ class MainActivity: FragmentActivity(), OnMapReadyCallback {
             updateMarkers(toiletPoints)
         }
         viewModel.isLoading.observe(this) { isLoading ->
-            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progress.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
         viewModel.errorMessage.observe(this) { errorMessage ->
             Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
