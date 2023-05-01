@@ -6,71 +6,45 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.JsonObject
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
-import com.google.maps.android.data.Point
-import com.google.maps.android.data.geojson.GeoJsonLayer
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import cz.cvut.fel.thethronelocator.network.MapoticApi
+import cz.cvut.fel.thethronelocator.repository.ToiletRepository
 
 
 class MainActivity: FragmentActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
-    private lateinit var geoJsonLayer: GeoJsonLayer
     private lateinit var clusterManager: ClusterManager<ToiletPoint>
+    private lateinit var viewModel: MapViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
 
-        getItems();
-
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-    }
 
-    private fun getItems() {
-        // Create a Retrofit instance with the desired base URL
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.mapotic.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        val progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progress)
 
-        // Create a service interface for the API
-        val apiService = retrofit.create(MapoticApiService::class.java)
+        val factory = MapViewModelFactory(ToiletRepository(MapoticApi.getInstance()))
 
-        // Make the API request to get the GeoJSON data
-        apiService.getGeoJsonData().enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    val jsonObject = JSONObject(response.body().toString())
-                    geoJsonLayer = GeoJsonLayer(map, jsonObject)
-                } else {
-                    val errorMessage = when (response.code()) {
-                        401 -> "Unauthorized: You are not authorized to access this resource."
-                        404 -> "Not Found: The requested resource was not found."
-                        500 -> "Internal Server Error: The server encountered an unexpected condition."
-                        else -> "Error: Something went wrong. Please try again later."
-                    }
-                    Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
-            }
-        })
+        viewModel = ViewModelProvider(this, factory)[MapViewModel::class.java]
+        viewModel.toiletPoints.observe(this) { toiletPoints ->
+            updateMarkers(toiletPoints)
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
 
@@ -100,52 +74,12 @@ class MainActivity: FragmentActivity(), OnMapReadyCallback {
         // manager.
         googleMap.setOnCameraIdleListener(clusterManager)
 
-        addItems()
+        viewModel.getToiletPoints()
     }
 
-    private fun addItems() {
-        // Create a Retrofit instance with the desired base URL
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.mapotic.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        // Create a service interface for the API
-        val apiService = retrofit.create(MapoticApiService::class.java)
-
-        // Make the API request to get the GeoJSON data
-        apiService.getGeoJsonData().enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    val jsonObject = JSONObject(response.body().toString())
-                    geoJsonLayer = GeoJsonLayer(map, jsonObject)
-
-                    // Loop through the GeoJsonLayer's features and create a new ToiletPoint for each one
-                    for (feature in geoJsonLayer.features) {
-                        val geometry = feature.geometry
-                        if (geometry is Point) {
-                            val toiletPoint = ToiletPoint(feature)
-                            clusterManager.addItem(toiletPoint)
-                        }
-                    }
-
-                    val progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progress)
-                    progressBar.visibility = View.GONE
-                    clusterManager.cluster()
-                } else {
-                    val errorMessage = when (response.code()) {
-                        401 -> "Unauthorized: You are not authorized to access this resource."
-                        404 -> "Not Found: The requested resource was not found."
-                        500 -> "Internal Server Error: The server encountered an unexpected condition."
-                        else -> "Error: Something went wrong. Please try again later."
-                    }
-                    Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
-            }
-        })
+    private fun updateMarkers(toiletPoints: List<ToiletPoint>) {
+        clusterManager.clearItems()
+        clusterManager.addItems(toiletPoints)
+        clusterManager.cluster()
     }
 }

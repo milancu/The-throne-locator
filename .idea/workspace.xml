@@ -9,12 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282f719f-63ae-46a1-8aff-94a7fd11fd6f" name="Changes" comment="Added Map with POI Clusters">
+    <list default="true" id="282f719f-63ae-46a1-8aff-94a7fd11fd6f" name="Changes" comment="Refactor to use MVVM and Repositroy patterns">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MapViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MapViewModelFactory.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/repository/ToiletRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MapoticApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/network/MapoticApi.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +36,8 @@
         <option value="valueResourceFile" />
         <option value="Kotlin Interface" />
         <option value="Kotlin Data Class" />
+        <option value="Kotlin Object" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -59,6 +63,9 @@
     <key name="android.template.-1667707111">
       <recent name="cz.cvut.fel.thethronelocator" />
       <recent name="cz.cvut.fel.thethronelocator.ui" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="cz.cvut.fel.thethronelocator.network" />
     </key>
   </component>
   <component name="RunManager">
@@ -153,6 +160,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added Map with POI Clusters" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Map with POI Clusters" />
+    <MESSAGE value="Refactor to use repository pattern" />
+    <MESSAGE value="Refactor to use MVVM and Repositroy patterns" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor to use MVVM and Repositroy patterns" />
   </component>
 </project>
