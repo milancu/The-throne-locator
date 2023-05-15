@@ -5,13 +5,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true" />
-
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"

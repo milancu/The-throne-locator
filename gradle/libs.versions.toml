@@ -1,5 +1,10 @@
 [versions]
-com-android-application = "8.0.0"
+android-maps-utils = "2.3.0"
+appcompat = "1.6.1"
+com-android-application = "8.0.1"
+converter-gson = "2.9.0"
+maps-utils-ktx = "3.4.0"
+material = "1.9.0"
 org-jetbrains-kotlin-android = "1.7.20"
 core-ktx = "1.9.0"
 junit = "4.13.2"
@@ -8,8 +13,13 @@ espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.3.1"
 activity-compose = "1.5.1"
 compose-bom = "2022.10.00"
+retrofit = "2.9.0"
+play-services-maps = "18.1.0"
 
 [libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converter-gson" }
+android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "android-maps-utils" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -17,6 +27,10 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "maps-utils-ktx" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

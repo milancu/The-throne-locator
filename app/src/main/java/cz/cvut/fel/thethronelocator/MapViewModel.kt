@@ -3,10 +3,10 @@ package cz.cvut.fel.thethronelocator
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cz.cvut.fel.thethronelocator.repository.ToiletRepository
+import cz.cvut.fel.thethronelocator.repository.ToiletPointRepository
 
 
-class MapViewModel(private val repository: ToiletRepository) : ViewModel() {
+class MapViewModel(private val repository: ToiletPointRepository) : ViewModel() {
     private val _toiletPoints = MutableLiveData<List<ToiletPoint>>()
     val toiletPoints: LiveData<List<ToiletPoint>> = _toiletPoints
 

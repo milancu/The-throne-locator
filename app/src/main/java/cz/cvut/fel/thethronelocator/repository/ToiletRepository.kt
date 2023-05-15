@@ -1,46 +1,37 @@
 package cz.cvut.fel.thethronelocator.repository
 
-import com.google.gson.JsonObject
-import com.google.maps.android.data.Point
-import com.google.maps.android.data.geojson.GeoJsonParser
-import cz.cvut.fel.thethronelocator.ToiletPoint
-import cz.cvut.fel.thethronelocator.network.MapoticApi
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import cz.cvut.fel.thethronelocator.model.Toilet
+import java.time.LocalDateTime
 
-class ToiletRepository constructor(private val mapoticApi: MapoticApi) {
-    fun getToiletPoints(onSuccess: (List<ToiletPoint>) -> Unit, onError: (String) -> Unit) {
-        val response = mapoticApi.getGeoJsonData()
-        response.enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    val jsonObject = JSONObject(response.body().toString())
-                    val geoJson = GeoJsonParser(jsonObject)
+class ToiletRepository {
 
-                    val toiletPoints = mutableListOf<ToiletPoint>()
-                    geoJson.features.forEach{ feature ->
-                        val geometry = feature.geometry
-                        if (geometry is Point) {
-                            toiletPoints.add(ToiletPoint(feature))
-                        }
-                    }
-                    onSuccess(toiletPoints)
-                } else {
-                    val errorMessage = when (response.code()) {
-                        401 -> "Unauthorized: You are not authorized to access this resource."
-                        404 -> "Not Found: The requested resource was not found."
-                        500 -> "Internal Server Error: The server encountered an unexpected condition."
-                        else -> "Error: Something went wrong. Please try again later."
-                    }
-                    onError(errorMessage)
-                }
-            }
+    private val _allToilets = MutableLiveData<List<Toilet>>()
+    val allToilet: LiveData<List<Toilet>> = _allToilets
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-               onError("Error: ${t.message}")
-            }
-        })
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun loadToilets() {
+        val toilets = ArrayList<Toilet>()
+
+
+        for (i in 0..10) {
+            toilets.add(
+                Toilet(
+                    name = "Toilet $i",
+                    type = "Public",
+                    address = "Prague 4",
+                    latitude = 50.5,
+                    longitude = 40.4,
+                    features = listOfNotNull(),
+                    openingTime = LocalDateTime.now(),
+                    closingTime = LocalDateTime.now()
+                )
+            )
+        }
+
+        _allToilets.value = toilets
     }
 }
