@@ -16,7 +16,7 @@
         android:theme="@style/Theme.TheThroneLocator"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.BaseActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.TheThroneLocator">
@@ -26,9 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ToiletList"/>
-        <activity android:name=".ui.MapPickerActivity"/>
-        <activity android:name=".ui.CookieClicker"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />

@@ -1,44 +1,46 @@
 package cz.cvut.fel.thethronelocator.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import cz.cvut.fel.thethronelocator.R
+import cz.cvut.fel.thethronelocator.databinding.ActivityBaseBinding
 
 open class BaseActivity : FragmentActivity() {
+    private lateinit var binding : ActivityBaseBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        binding = ActivityBaseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.item_1 -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
+        val bottomNavigationView = binding.bottomNavigationView
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
 
-                R.id.item_2 -> {
-                    val intent = Intent(this, ToiletList::class.java)
-//                    val intent = Intent(this, CookieClicker::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
+        bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.mapFragment) {
+                val params = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+                binding.searchBarWrapper.bringToFront()
+                binding.fragmentContainerView.layoutParams = params
+
+            } else {
+                val params = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+                params.setMargins(20, 0, 20, 0)
+                params.addRule(RelativeLayout.BELOW, binding.searchBarWrapper.id)
+                params.addRule(RelativeLayout.ABOVE, binding.bottomNavigationView.id)
+                binding.fragmentContainerView.layoutParams = params
             }
         }
-    }
-
-    protected fun setContentLayoutOverLappingSearchBar(layoutResId: Int) {
-        val contentFrame = findViewById<FrameLayout>(R.id.content_frame_overlap_search_bar)
-        layoutInflater.inflate(layoutResId, contentFrame, true)
-    }
-
-    protected fun setContentLayout(layoutResId: Int) {
-        val contentFrame = findViewById<FrameLayout>(R.id.content_frame)
-        layoutInflater.inflate(layoutResId, contentFrame, true)
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/mapFragment">
+
+    <action
+        android:id="@+id/action_to_detail"
+        app:destination="@id/toiletDetailFragment"
+        />
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
+    </fragment>
+    <fragment
+        android:id="@+id/toiletListFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ToiletListFragment"
+        android:label="ToiletListFragment"
+        tools:layout="@layout/toilet_list">
+    </fragment>
+    <fragment
+        android:id="@+id/toiletDetailFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ToiletDetailFragment"
+        android:label="ToiletDetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="toiletId"
+            app:argType="integer" />
+    </fragment>
+</navigation>

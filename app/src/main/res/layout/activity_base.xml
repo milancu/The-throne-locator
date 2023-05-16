@@ -1,46 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <!-- THIS IS JUST FOR MAP, CAUSE WE WANT TO MAP HAS INFINITY SCREEN AND THE SARCH_BAR FLOATING -->
-    <FrameLayout
-        android:id="@+id/content_frame_overlap_search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
+    <!-- Search Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/search_bar_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        >
+        android:background="@android:color/transparent">
 
         <com.google.android.material.search.SearchBar
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:hint="Hinted search text"/>
+            android:hint="Hinted search text" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <!-- This is for all activities -->
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <!-- Main content of the activity -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_navigation_view"
-        android:layout_below="@+id/search_bar_wrapper"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="0dp"/>
-
-
+        app:defaultNavHost="true"
+        android:layout_above="@id/bottom_navigation_view"
+        android:layout_below="@id/search_bar_wrapper"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:navGraph="@navigation/main_nav" />
 
     <!-- Bottom navigation view -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,9 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu"
-        />
-
+        app:menu="@menu/bottom_navigation_menu" />
 </RelativeLayout>
 
 
