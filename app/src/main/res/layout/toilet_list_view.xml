@@ -20,7 +20,7 @@
                 android:layout_height="100dp"
                 android:contentDescription="Toilet"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/media_foreground" />
+                android:src="@drawable/media_foreground" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
