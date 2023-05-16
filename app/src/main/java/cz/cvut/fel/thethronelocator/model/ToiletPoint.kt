@@ -1,4 +1,4 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.model
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
@@ -10,16 +10,16 @@ class ToiletPoint(private val feature: GeoJsonFeature) : ClusterItem {
     val lastUpdate: String? = feature.getProperty("last_update")
     val name: String? = feature.getProperty("name")
     val slug: String? = feature.getProperty("slug")
-    val categoryId: Int? = feature.getProperty("category").toInt()
-    val isPublished: Boolean? = feature.getProperty("is_published").toBoolean();
-    val rating: Double? = feature.getProperty("rating")?.toDouble();
+    val categoryId: Int? = feature.getProperty("category")?.toInt()
+    val isPublished: Boolean? = feature.getProperty("is_published")?.toBoolean()
+    val rating: Double? = feature.getProperty("rating")?.toDouble()
 
     override fun getPosition(): LatLng {
         return position
     }
 
     override fun getTitle(): String? {
-        return name;
+        return name
     }
 
     override fun getSnippet(): String? {

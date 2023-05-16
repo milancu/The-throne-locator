@@ -1,9 +1,11 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cz.cvut.fel.thethronelocator.repository.ToiletPointRepository
+import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
+import cz.cvut.fel.thethronelocator.model.ToiletPoint
 
 
 class MapViewModel(private val repository: ToiletPointRepository) : ViewModel() {
@@ -15,6 +17,9 @@ class MapViewModel(private val repository: ToiletPointRepository) : ViewModel() 
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
+
+    val algorithm: NonHierarchicalViewBasedAlgorithm<ToiletPoint> =
+        NonHierarchicalViewBasedAlgorithm<ToiletPoint>(0, 0)
 
     fun getToiletPoints() {
         _isLoading.postValue(true)

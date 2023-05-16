@@ -1,4 +1,4 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
