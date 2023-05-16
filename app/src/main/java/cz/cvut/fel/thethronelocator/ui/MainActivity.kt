@@ -31,7 +31,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 //        setContentLayout(R.layout.main)
 //        setContentView(binding.root)
-        setContentLayout(R.layout.main)
+        setContentLayoutOverLappingSearchBar(R.layout.main)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
