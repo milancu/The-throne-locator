@@ -10,17 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="236a9aa2-e0a2-4691-b6da-af418700f6f2" name="Changes" comment="Restructured code">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/ToiletDetailActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/detail.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/BaseActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/BaseActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MapViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/viewmodel/MapViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MapViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/viewmodel/MapViewModelFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ToiletList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/ToiletList.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ToiletPoint.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/model/ToiletPoint.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/repository/ToiletPointRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/repository/ToiletPointRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/BaseActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/BaseActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +20,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[adb-R3CT30WT5KZ-2655UT._adb-tls-connect._tcp]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\phuon\.android\avd\Pixel_7_Pro_API_33.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -89,6 +79,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -109,8 +104,8 @@
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;A:/CVUT/6/PDA/toilet-map/app&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;milan/cookie__clicker&quot;,
+    &quot;last_opened_file_path&quot;: &quot;A:/CVUT/6/PDA/toilet-map/app/src/main/res/drawable&quot;,
     &quot;memory.settings.postsync.last.time.stamp&quot;: &quot;1682970915248&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
@@ -123,6 +118,7 @@
       <recent name="cz.cvut.fel.thethronelocator.ui" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="A:\CVUT\6\PDA\toilet-map\app\src\main\res\drawable" />
       <recent name="A:\CVUT\6\PDA\toilet-map\app" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
@@ -141,7 +137,6 @@
       <option name="ALL_USERS" value="false" />
       <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
       <option name="CLEAR_APP_STORAGE" value="false" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="CLEAR_LOGCAT" value="false" />
@@ -157,6 +152,8 @@
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Auto>
       <Hybrid>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
@@ -164,14 +161,21 @@
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Hybrid>
-      <Java />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
       <Native>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Native>
       <Profilers>
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
@@ -213,7 +217,28 @@
       <option name="project" value="LOCAL" />
       <updated>1682970395625</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Restructured code">
+      <created>1684244067208</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684244067208</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Restructured code">
+      <created>1684244107895</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684244107895</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Restructured code">
+      <created>1684244151386</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684244151386</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

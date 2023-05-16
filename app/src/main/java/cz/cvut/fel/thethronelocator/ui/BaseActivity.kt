@@ -23,6 +23,7 @@ open class BaseActivity : FragmentActivity() {
 
                 R.id.item_2 -> {
                     val intent = Intent(this, ToiletList::class.java)
+//                    val intent = Intent(this, CookieClicker::class.java)
                     startActivity(intent)
                     true
                 }
