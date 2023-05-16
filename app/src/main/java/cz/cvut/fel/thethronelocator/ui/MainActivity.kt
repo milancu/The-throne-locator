@@ -1,5 +1,7 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.ui
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.Toast
@@ -10,10 +12,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
+import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.databinding.MainBinding
+import cz.cvut.fel.thethronelocator.model.ToiletPoint
 import cz.cvut.fel.thethronelocator.network.MapoticApi
 import cz.cvut.fel.thethronelocator.repository.ToiletPointRepository
+import cz.cvut.fel.thethronelocator.viewmodel.MapViewModel
+import cz.cvut.fel.thethronelocator.viewmodel.MapViewModelFactory
 
 
 class MainActivity : BaseActivity(), OnMapReadyCallback {
@@ -26,7 +31,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 //        setContentLayout(R.layout.main)
 //        setContentView(binding.root)
-        setContentLayoutOverLappingSearchBar(R.layout.main)
+        setContentLayout(R.layout.main)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -44,9 +49,20 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         viewModel.errorMessage.observe(this) { errorMessage ->
             Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
         }
+
+        viewModel.getToiletPoints()
     }
+
+
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(50.073658, 14.418540),
+                10f
+            )
+        )
 
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
@@ -54,24 +70,26 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         val widthDp = (metrics.widthPixels / metrics.density).toInt()
         val heightDp = (metrics.heightPixels / metrics.density).toInt()
 
-        googleMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(50.073658, 14.418540),
-                10f
-            )
-        )
+        viewModel.algorithm.updateViewSize(widthDp, heightDp)
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        clusterManager = ClusterManager(this@MainActivity, googleMap)
-        clusterManager.setAlgorithm(NonHierarchicalViewBasedAlgorithm(widthDp, heightDp))
+        clusterManager = ClusterManager(this@MainActivity, map)
+        clusterManager.setAlgorithm(viewModel.algorithm)
 
+        // Set a click listener for the cluster items
+        clusterManager.setOnClusterItemClickListener { item ->
+            // Create an intent to open the ToiletDetail activity
+            val intent = Intent(this@MainActivity, ToiletDetailActivity::class.java)
+            intent.putExtra("toiletId", item.id)
+            startActivity(intent)
+            true
+        }
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        googleMap.setOnCameraIdleListener(clusterManager)
-
-        viewModel.getToiletPoints()
+        map.setOnCameraIdleListener(clusterManager)
+        map.setOnMarkerClickListener(clusterManager)
     }
 
     private fun updateMarkers(toiletPoints: List<ToiletPoint>) {

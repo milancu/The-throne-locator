@@ -1,4 +1,4 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.ui
 
 import android.os.Build
 import android.os.Bundle
@@ -6,6 +6,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.thethronelocator.R
+import cz.cvut.fel.thethronelocator.ToiletListAdapter
 import cz.cvut.fel.thethronelocator.model.Toilet
 import cz.cvut.fel.thethronelocator.repository.ToiletRepository
 

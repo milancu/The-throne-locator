@@ -3,7 +3,7 @@ package cz.cvut.fel.thethronelocator.repository
 import com.google.gson.JsonObject
 import com.google.maps.android.data.Point
 import com.google.maps.android.data.geojson.GeoJsonParser
-import cz.cvut.fel.thethronelocator.ToiletPoint
+import cz.cvut.fel.thethronelocator.model.ToiletPoint
 import cz.cvut.fel.thethronelocator.network.MapoticApi
 import org.json.JSONObject
 import retrofit2.Call

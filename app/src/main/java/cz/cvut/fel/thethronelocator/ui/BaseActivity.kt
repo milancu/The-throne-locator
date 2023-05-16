@@ -1,10 +1,11 @@
-package cz.cvut.fel.thethronelocator
+package cz.cvut.fel.thethronelocator.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import cz.cvut.fel.thethronelocator.R
 
 open class BaseActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
