@@ -3,7 +3,6 @@ package cz.cvut.fel.thethronelocator
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

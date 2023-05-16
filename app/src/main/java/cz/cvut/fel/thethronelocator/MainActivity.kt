@@ -1,13 +1,8 @@
 package cz.cvut.fel.thethronelocator
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -31,7 +26,7 @@ class MainActivity : BaseActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 //        setContentLayout(R.layout.main)
 //        setContentView(binding.root)
-        setContentLayout(R.layout.main)
+        setContentLayoutOverLappingSearchBar(R.layout.main)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment

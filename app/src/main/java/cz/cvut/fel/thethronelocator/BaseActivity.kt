@@ -3,7 +3,6 @@ package cz.cvut.fel.thethronelocator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -29,6 +28,11 @@ open class BaseActivity : FragmentActivity() {
                 else -> false
             }
         }
+    }
+
+    protected fun setContentLayoutOverLappingSearchBar(layoutResId: Int) {
+        val contentFrame = findViewById<FrameLayout>(R.id.content_frame_overlap_search_bar)
+        layoutInflater.inflate(layoutResId, contentFrame, true)
     }
 
     protected fun setContentLayout(layoutResId: Int) {

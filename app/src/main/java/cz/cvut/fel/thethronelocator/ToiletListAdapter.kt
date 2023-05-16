@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.thethronelocator.model.Toilet
 
 class ToiletListviewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private val tempText: TextView = view.findViewById<TextView>(R.id.tempText)
-    private val description: TextView = view.findViewById<TextView>(R.id.textView3)
+    private val tempText: TextView = view.findViewById<TextView>(R.id.toiletName)
+    private val description: TextView = view.findViewById<TextView>(R.id.toiletDistance)
 
     fun bind(toilet: Toilet) {
         tempText.text = toilet.name

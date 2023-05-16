@@ -1,0 +1,492 @@
+Index: app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cz.cvut.fel.thethronelocator\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Surface\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport cz.cvut.fel.thethronelocator.ui.theme.TheThroneLocatorTheme\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContent {\r\n            TheThroneLocatorTheme {\r\n                // A surface container using the 'background' color from the theme\r\n                Surface(\r\n                    modifier = Modifier.fillMaxSize(),\r\n                    color = MaterialTheme.colorScheme.background\r\n                ) {\r\n                    Greeting(\"Android\")\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun Greeting(name: String, modifier: Modifier = Modifier) {\r\n    Text(\r\n        text = \"Hello $name!\",\r\n        modifier = modifier\r\n    )\r\n}\r\n\r\n@Preview(showBackground = true)\r\n@Composable\r\nfun GreetingPreview() {\r\n    TheThroneLocatorTheme {\r\n        Greeting(\"Android\")\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt b/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt
+--- a/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt	(date 1681052945566)
+@@ -1,46 +1,22 @@
+ package cz.cvut.fel.thethronelocator
+ 
+ import android.os.Bundle
++import android.widget.Button
++import android.widget.Toast
+ import androidx.activity.ComponentActivity
+ import androidx.activity.compose.setContent
+-import androidx.compose.foundation.layout.fillMaxSize
+-import androidx.compose.material3.MaterialTheme
+-import androidx.compose.material3.Surface
+-import androidx.compose.material3.Text
+-import androidx.compose.runtime.Composable
+-import androidx.compose.ui.Modifier
+-import androidx.compose.ui.tooling.preview.Preview
+-import cz.cvut.fel.thethronelocator.ui.theme.TheThroneLocatorTheme
+ 
+ class MainActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContent {
+-            TheThroneLocatorTheme {
+-                // A surface container using the 'background' color from the theme
+-                Surface(
+-                    modifier = Modifier.fillMaxSize(),
+-                    color = MaterialTheme.colorScheme.background
+-                ) {
+-                    Greeting("Android")
+-                }
+-            }
++            R.layout.activity_main
+         }
+-    }
+-}
+ 
+-@Composable
+-fun Greeting(name: String, modifier: Modifier = Modifier) {
+-    Text(
+-        text = "Hello $name!",
+-        modifier = modifier
+-    )
+-}
+-
+-@Preview(showBackground = true)
+-@Composable
+-fun GreetingPreview() {
+-    TheThroneLocatorTheme {
+-        Greeting("Android")
++        val button = findViewById<Button>(R.id.button1)
++
++        button.setOnClickListener {
++            Toast.makeText(this, "CLicked", Toast.LENGTH_SHORT).show()
++        }
+     }
+ }
+\ No newline at end of file
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    alias(libs.plugins.com.android.application)\r\n    alias(libs.plugins.org.jetbrains.kotlin.android)\r\n}\r\n\r\nandroid {\r\n    namespace = \"cz.cvut.fel.thethronelocator\"\r\n    compileSdk = 33\r\n\r\n    defaultConfig {\r\n        applicationId = \"cz.cvut.fel.thethronelocator\"\r\n        minSdk = 24\r\n        targetSdk = 33\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n        vectorDrawables {\r\n            useSupportLibrary = true\r\n        }\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_1_8\r\n        targetCompatibility = JavaVersion.VERSION_1_8\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = \"1.8\"\r\n    }\r\n    buildFeatures {\r\n        compose = true\r\n    }\r\n    composeOptions {\r\n        kotlinCompilerExtensionVersion = \"1.3.2\"\r\n    }\r\n    packaging {\r\n        resources {\r\n            excludes += \"/META-INF/{AL2.0,LGPL2.1}\"\r\n        }\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation(libs.core.ktx)\r\n    implementation(libs.lifecycle.runtime.ktx)\r\n    implementation(libs.activity.compose)\r\n    implementation(platform(libs.compose.bom))\r\n    implementation(libs.ui)\r\n    implementation(libs.ui.graphics)\r\n    implementation(libs.ui.tooling.preview)\r\n    implementation(libs.material3)\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.androidx.test.ext.junit)\r\n    androidTestImplementation(libs.espresso.core)\r\n    androidTestImplementation(platform(libs.compose.bom))\r\n    androidTestImplementation(libs.ui.test.junit4)\r\n    debugImplementation(libs.ui.tooling)\r\n    debugImplementation(libs.ui.test.manifest)\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/app/build.gradle.kts	(date 1681067934278)
+@@ -50,7 +50,10 @@
+ }
+ 
+ dependencies {
+-
++//    implementation("androidx.compose.material3:material3:1.0.1")
++//    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
++    implementation (libs.androidx.constraintlayout)
++//    implementation ("com.google.android.material:material:3.1.0")
+     implementation(libs.core.ktx)
+     implementation(libs.lifecycle.runtime.ktx)
+     implementation(libs.activity.compose)
+@@ -59,6 +62,7 @@
+     implementation(libs.ui.graphics)
+     implementation(libs.ui.tooling.preview)
+     implementation(libs.material3)
++    implementation(libs.play.services.maps)
+     testImplementation(libs.junit)
+     androidTestImplementation(libs.androidx.test.ext.junit)
+     androidTestImplementation(libs.espresso.core)
+Index: app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Theme.kt
+===================================================================
+diff --git a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Theme.kt b/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Theme.kt
+deleted file mode 100644
+--- a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Theme.kt	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ /dev/null	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
+@@ -1,70 +0,0 @@
+-package cz.cvut.fel.thethronelocator.ui.theme
+-
+-import android.app.Activity
+-import android.os.Build
+-import androidx.compose.foundation.isSystemInDarkTheme
+-import androidx.compose.material3.MaterialTheme
+-import androidx.compose.material3.darkColorScheme
+-import androidx.compose.material3.dynamicDarkColorScheme
+-import androidx.compose.material3.dynamicLightColorScheme
+-import androidx.compose.material3.lightColorScheme
+-import androidx.compose.runtime.Composable
+-import androidx.compose.runtime.SideEffect
+-import androidx.compose.ui.graphics.toArgb
+-import androidx.compose.ui.platform.LocalContext
+-import androidx.compose.ui.platform.LocalView
+-import androidx.core.view.WindowCompat
+-
+-private val DarkColorScheme = darkColorScheme(
+-    primary = Purple80,
+-    secondary = PurpleGrey80,
+-    tertiary = Pink80
+-)
+-
+-private val LightColorScheme = lightColorScheme(
+-    primary = Purple40,
+-    secondary = PurpleGrey40,
+-    tertiary = Pink40
+-
+-    /* Other default colors to override
+-    background = Color(0xFFFFFBFE),
+-    surface = Color(0xFFFFFBFE),
+-    onPrimary = Color.White,
+-    onSecondary = Color.White,
+-    onTertiary = Color.White,
+-    onBackground = Color(0xFF1C1B1F),
+-    onSurface = Color(0xFF1C1B1F),
+-    */
+-)
+-
+-@Composable
+-fun TheThroneLocatorTheme(
+-    darkTheme: Boolean = isSystemInDarkTheme(),
+-    // Dynamic color is available on Android 12+
+-    dynamicColor: Boolean = true,
+-    content: @Composable () -> Unit
+-) {
+-    val colorScheme = when {
+-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+-            val context = LocalContext.current
+-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+-        }
+-
+-        darkTheme -> DarkColorScheme
+-        else -> LightColorScheme
+-    }
+-    val view = LocalView.current
+-    if (!view.isInEditMode) {
+-        SideEffect {
+-            val window = (view.context as Activity).window
+-            window.statusBarColor = colorScheme.primary.toArgb()
+-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+-        }
+-    }
+-
+-    MaterialTheme(
+-        colorScheme = colorScheme,
+-        typography = Typography,
+-        content = content
+-    )
+-}
+\ No newline at end of file
+Index: app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Type.kt
+===================================================================
+diff --git a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Type.kt b/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Type.kt
+deleted file mode 100644
+--- a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Type.kt	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ /dev/null	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
+@@ -1,34 +0,0 @@
+-package cz.cvut.fel.thethronelocator.ui.theme
+-
+-import androidx.compose.material3.Typography
+-import androidx.compose.ui.text.TextStyle
+-import androidx.compose.ui.text.font.FontFamily
+-import androidx.compose.ui.text.font.FontWeight
+-import androidx.compose.ui.unit.sp
+-
+-// Set of Material typography styles to start with
+-val Typography = Typography(
+-    bodyLarge = TextStyle(
+-        fontFamily = FontFamily.Default,
+-        fontWeight = FontWeight.Normal,
+-        fontSize = 16.sp,
+-        lineHeight = 24.sp,
+-        letterSpacing = 0.5.sp
+-    )
+-    /* Other default text styles to override
+-    titleLarge = TextStyle(
+-        fontFamily = FontFamily.Default,
+-        fontWeight = FontWeight.Normal,
+-        fontSize = 22.sp,
+-        lineHeight = 28.sp,
+-        letterSpacing = 0.sp
+-    ),
+-    labelSmall = TextStyle(
+-        fontFamily = FontFamily.Default,
+-        fontWeight = FontWeight.Medium,
+-        fontSize = 11.sp,
+-        lineHeight = 16.sp,
+-        letterSpacing = 0.5.sp
+-    )
+-    */
+-)
+\ No newline at end of file
+Index: app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Color.kt
+===================================================================
+diff --git a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Color.kt b/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Color.kt
+deleted file mode 100644
+--- a/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Color.kt	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ /dev/null	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
+@@ -1,11 +0,0 @@
+-package cz.cvut.fel.thethronelocator.ui.theme
+-
+-import androidx.compose.ui.graphics.Color
+-
+-val Purple80 = Color(0xFFD0BCFF)
+-val PurpleGrey80 = Color(0xFFCCC2DC)
+-val Pink80 = Color(0xFFEFB8C8)
+-
+-val Purple40 = Color(0xFF6650a4)
+-val PurpleGrey40 = Color(0xFF625b71)
+-val Pink40 = Color(0xFF7D5260)
+\ No newline at end of file
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/dimens.xml b/app/src/main/res/values/dimens.xml
+new file mode 100644
+--- /dev/null	(date 1681048859059)
++++ b/app/src/main/res/values/dimens.xml	(date 1681048859059)
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <dimen name="title_text_height">18sp</dimen>
++</resources>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"app\" type=\"AndroidRunConfigurationType\" factoryName=\"Android App\">\r\n      <module name=\"The_Throne_Locator.app.main\" />\r\n      <option name=\"DEPLOY\" value=\"true\" />\r\n      <option name=\"DEPLOY_APK_FROM_BUNDLE\" value=\"false\" />\r\n      <option name=\"DEPLOY_AS_INSTANT\" value=\"false\" />\r\n      <option name=\"ARTIFACT_NAME\" value=\"\" />\r\n      <option name=\"PM_INSTALL_OPTIONS\" value=\"\" />\r\n      <option name=\"ALL_USERS\" value=\"false\" />\r\n      <option name=\"ALWAYS_INSTALL_WITH_PM\" value=\"false\" />\r\n      <option name=\"CLEAR_APP_STORAGE\" value=\"false\" />\r\n      <option name=\"ACTIVITY_EXTRA_FLAGS\" value=\"\" />\r\n      <option name=\"MODE\" value=\"default_activity\" />\r\n      <option name=\"CLEAR_LOGCAT\" value=\"false\" />\r\n      <option name=\"SHOW_LOGCAT_AUTOMATICALLY\" value=\"false\" />\r\n      <option name=\"INSPECTION_WITHOUT_ACTIVITY_RESTART\" value=\"false\" />\r\n      <option name=\"TARGET_SELECTION_MODE\" value=\"DEVICE_AND_SNAPSHOT_COMBO_BOX\" />\r\n      <option name=\"SELECTED_CLOUD_MATRIX_CONFIGURATION_ID\" value=\"-1\" />\r\n      <option name=\"SELECTED_CLOUD_MATRIX_PROJECT_ID\" value=\"\" />\r\n      <option name=\"DEBUGGER_TYPE\" value=\"Auto\" />\r\n      <Auto>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n      </Auto>\r\n      <Hybrid>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n      </Hybrid>\r\n      <Java>\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n      </Java>\r\n      <Native>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n      </Native>\r\n      <Profilers>\r\n        <option name=\"ADVANCED_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_CPU_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_CPU_PROFILING_CONFIGURATION_NAME\" value=\"Java/Kotlin Method Sample (legacy)\" />\r\n        <option name=\"STARTUP_NATIVE_MEMORY_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"NATIVE_MEMORY_SAMPLE_RATE_BYTES\" value=\"2048\" />\r\n      </Profilers>\r\n      <option name=\"DEEP_LINK\" value=\"\" />\r\n      <option name=\"ACTIVITY_CLASS\" value=\"\" />\r\n      <option name=\"SEARCH_ACTIVITY_IN_GLOBAL_SCOPE\" value=\"false\" />\r\n      <option name=\"SKIP_ACTIVITY_VALIDATION\" value=\"false\" />\r\n      <method v=\"2\">\r\n        <option name=\"Android.Gradle.BeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/.idea/workspace.xml	(date 1683922370467)
+@@ -1,5 +1,61 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AndroidLayouts">
++    <shared>
++      <config />
++    </shared>
++  </component>
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="NONE" />
++  </component>
++  <component name="ChangeListManager">
++    <list default="true" id="7df2fe43-37c6-4b03-b5df-0625cf69f118" name="Changes" comment="fix naming">
++      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/MainActivity.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Color.kt" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Theme.kt" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/cz/cvut/fel/thethronelocator/ui/theme/Type.kt" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
++    </list>
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\phuon\.android\avd\Pixel_7_Pro_API_33.avd]" />
++  <component name="ExternalProjectsData">
++    <projectState path="$PROJECT_DIR$">
++      <ProjectState />
++    </projectState>
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="layoutResourceFile_vertical" />
++        <option value="valueResourceFile" />
++      </list>
++    </option>
++  </component>
++  <component name="MarkdownSettingsMigration">
++    <option name="stateVersion" value="1" />
++  </component>
++  <component name="ProjectId" id="2OBZT6325DTjqtqfXVTYkfOQ48a" />
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
++  }
++}</component>
+   <component name="RunManager">
+     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+       <module name="The_Throne_Locator.app.main" />
+@@ -27,6 +83,7 @@
+         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+         <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
++        <option name="DEBUG_SANDBOX_SDK" value="false" />
+       </Auto>
+       <Hybrid>
+         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+@@ -35,9 +92,11 @@
+         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+         <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
++        <option name="DEBUG_SANDBOX_SDK" value="false" />
+       </Hybrid>
+       <Java>
+         <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
++        <option name="DEBUG_SANDBOX_SDK" value="false" />
+       </Java>
+       <Native>
+         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+@@ -46,6 +105,7 @@
+         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+         <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
++        <option name="DEBUG_SANDBOX_SDK" value="false" />
+       </Native>
+       <Profilers>
+         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+@@ -64,4 +124,27 @@
+       </method>
+     </configuration>
+   </component>
++  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="7df2fe43-37c6-4b03-b5df-0625cf69f118" name="Changes" comment="" />
++      <created>1681035939947</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1681035939947</updated>
++    </task>
++    <task id="LOCAL-00001" summary="fix naming">
++      <created>1681036055143</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1681036055143</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
++    <servers />
++  </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="fix naming" />
++    <option name="LAST_COMMIT_MESSAGE" value="fix naming" />
++  </component>
+ </project>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+new file mode 100644
+--- /dev/null	(date 1681053785154)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1681053785154)
+@@ -0,0 +1,31 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    tools:context=".MainActivity"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:orientation="vertical">
++
++    <TextView
++        android:id="@+id/textView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="@string/app_name"
++        android:textSize="@dimen/title_text_height"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/button1" />
++
++    <Button
++        android:id="@+id/button1"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Text"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"jbr-17\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/.idea/gradle.xml	(date 1683922370496)
+@@ -1,10 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="GradleMigrationSettings" migrationVersion="1" />
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <option name="testRunner" value="GRADLE" />
+-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+         <option name="gradleJvm" value="jbr-17" />
+         <option name="modules">
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"jbr-17\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/.idea/misc.xml	(date 1683922157173)
+@@ -1,4 +1,3 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\ncom-android-application = \"8.1.0-alpha11\"\r\norg-jetbrains-kotlin-android = \"1.7.20\"\r\ncore-ktx = \"1.9.0\"\r\njunit = \"4.13.2\"\r\nandroidx-test-ext-junit = \"1.1.5\"\r\nespresso-core = \"3.5.1\"\r\nlifecycle-runtime-ktx = \"2.3.1\"\r\nactivity-compose = \"1.5.1\"\r\ncompose-bom = \"2022.10.00\"\r\n\r\n[libraries]\r\ncore-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"core-ktx\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-test-ext-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"androidx-test-ext-junit\" }\r\nespresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espresso-core\" }\r\nlifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycle-runtime-ktx\" }\r\nactivity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activity-compose\" }\r\ncompose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"compose-bom\" }\r\nui = { group = \"androidx.compose.ui\", name = \"ui\" }\r\nui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" }\r\nui-tooling = { group = \"androidx.compose.ui\", name = \"ui-tooling\" }\r\nui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" }\r\nui-test-manifest = { group = \"androidx.compose.ui\", name = \"ui-test-manifest\" }\r\nui-test-junit4 = { group = \"androidx.compose.ui\", name = \"ui-test-junit4\" }\r\nmaterial3 = { group = \"androidx.compose.material3\", name = \"material3\" }\r\n\r\n[plugins]\r\ncom-android-application = { id = \"com.android.application\", version.ref = \"com-android-application\" }\r\norg-jetbrains-kotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"org-jetbrains-kotlin-android\" }\r\n\r\n[bundles]\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision 4f624512eff8f920450ec66b1aa2de82b55f1c14)
++++ b/gradle/libs.versions.toml	(date 1683922281457)
+@@ -1,5 +1,6 @@
+ [versions]
+-com-android-application = "8.1.0-alpha11"
++com-android-application = "8.2.0-alpha03"
++constraintlayout = "2.1.4"
+ org-jetbrains-kotlin-android = "1.7.20"
+ core-ktx = "1.9.0"
+ junit = "4.13.2"
+@@ -10,6 +11,7 @@
+ compose-bom = "2022.10.00"
+ 
+ [libraries]
++androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+ junit = { group = "junit", name = "junit", version.ref = "junit" }
+ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+@@ -24,6 +26,7 @@
+ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+ material3 = { group = "androidx.compose.material3", name = "material3" }
++play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version = "18.1.0" }
+ 
+ [plugins]
+ com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
