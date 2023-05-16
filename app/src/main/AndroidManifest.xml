@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ToiletList"/>
+        <activity android:name=".ui.MapPickerActivity"/>
         <activity android:name=".ui.CookieClicker"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
