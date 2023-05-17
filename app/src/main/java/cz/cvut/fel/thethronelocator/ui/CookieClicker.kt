@@ -52,11 +52,6 @@ class CookieClicker : FragmentActivity() {
                 screenWidth = displayMetrics.widthPixels
                 screenHeight = displayMetrics.heightPixels
 
-                val textCounterX = textCounter.x + 50 //fix offset
-                val textCounterY = textCounter.y + 900
-
-                imageView.x = textCounterX
-                imageView.y = textCounterY
                 imageView.rotation = Random.nextInt(360).toFloat()
 
                 val animX = ObjectAnimator.ofFloat(
@@ -139,6 +134,8 @@ class CookieClicker : FragmentActivity() {
             RelativeLayout.LayoutParams.WRAP_CONTENT,
             RelativeLayout.LayoutParams.WRAP_CONTENT
         )
+        imageView.x = (containerLayout.width / 2 - 140).toFloat()
+        imageView.y = (containerLayout.height / 2 - 100).toFloat()
         return imageView
     }
 
