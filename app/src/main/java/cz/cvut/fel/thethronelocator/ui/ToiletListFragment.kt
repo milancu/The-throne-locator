@@ -46,8 +46,8 @@ class ToiletListFragment : Fragment() {
     private val toiletRepository = ToiletRepository()
     private lateinit var dialogView: View
     private lateinit var filterDialog: AlertDialog
-    private lateinit var sortDialog: AlertDialog
     private lateinit var addNewDialog: AlertDialog
+    private lateinit var sortDialog: AlertDialog
 
     private var selectedSortByTmp: SortType = SortType.RATING
     private var filterByTypeTmp: MutableList<ToiletType> =
@@ -111,8 +111,8 @@ class ToiletListFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        filterDialog = createFilterDialog(context)
         sortDialog = createSortDialog(context)
+        filterDialog = createFilterDialog(context)
         addNewDialog = createAddNewDialog(context)
 
         filterDialog.window?.setLayout(

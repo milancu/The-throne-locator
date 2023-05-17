@@ -1,47 +1,72 @@
 package cz.cvut.fel.thethronelocator.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.CheckBox
 import android.widget.Toast
-import androidx.core.os.bundleOf
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.clustering.Cluster
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.google.maps.android.clustering.ClusterManager
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.databinding.FragmentMapBinding
 import cz.cvut.fel.thethronelocator.model.ToiletPoint
+import cz.cvut.fel.thethronelocator.model.enum.ToiletType
 import cz.cvut.fel.thethronelocator.network.MapoticApi
 import cz.cvut.fel.thethronelocator.repository.ToiletPointRepository
+import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
 import cz.cvut.fel.thethronelocator.viewmodel.MapViewModel
 import cz.cvut.fel.thethronelocator.viewmodel.MapViewModelFactory
 
 
-class MapFragment : Fragment(), OnMapReadyCallback  {
+class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private var _binding: FragmentMapBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var clusterManager: ClusterManager<ToiletPoint>
     private lateinit var viewModel: MapViewModel
     private lateinit var navController: NavController
+
+    private lateinit var dialogView: View
+    private lateinit var filterDialog: AlertDialog
+    private lateinit var addNewDialog: AlertDialog
+
+    private var filterByTypeTmp: MutableList<ToiletType> =
+        listOf(
+            ToiletType.IN_A_PARK,
+            ToiletType.IN_SHOPPING_MAIL,
+            ToiletType.STANDLONE
+        ).toMutableList()
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>TADY HODNOTY PRO FILTRACI<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    private var filterByType: List<ToiletType> = emptyList()
+
+    companion object {
+        private const val MAP_PICKER_REQUEST_CODE = 123
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,6 +103,36 @@ class MapFragment : Fragment(), OnMapReadyCallback  {
         }
 
         viewModel.getToiletPoints()
+
+
+        val filterIconButton = binding.filterIconButton
+        filterIconButton.setOnClickListener {
+            filterDialog.show()
+        }
+
+        val addToiletIconButton = binding.addToiletIconButton
+        addToiletIconButton.setOnClickListener {
+            addNewDialog.show()
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        filterDialog = createFilterDialog(context)
+        addNewDialog = createAddNewDialog(context)
+
+        filterDialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        filterDialog.window?.setGravity(Gravity.CENTER)
+
+        addNewDialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        addNewDialog.window?.setGravity(Gravity.CENTER)
     }
 
 
@@ -135,7 +190,7 @@ class MapFragment : Fragment(), OnMapReadyCallback  {
             true
         }
 
-        clusterManager.setOnClusterItemClickListener {item ->
+        clusterManager.setOnClusterItemClickListener { item ->
             val bundle = Bundle().apply {
                 putInt("toiletId", item.id)
                 putString("name", item.name)
@@ -152,5 +207,107 @@ class MapFragment : Fragment(), OnMapReadyCallback  {
         clusterManager.clearItems()
         clusterManager.addItems(toiletPoints)
         clusterManager.cluster()
+    }
+
+    private fun createFilterDialog(context: Context): AlertDialog {
+        val dialog = MaterialAlertDialogBuilder(context)
+
+        val dialogView = layoutInflater.inflate(R.layout.filter_dialog, null)
+        val checkBox1 = dialogView.findViewById<CheckBox>(R.id.checkbox_child_1)
+        val checkBox2 = dialogView.findViewById<CheckBox>(R.id.checkbox_child_2)
+        val checkBox3 = dialogView.findViewById<CheckBox>(R.id.checkbox_child_3)
+
+
+        checkBox1.isChecked = filterByTypeTmp.contains(ToiletType.STANDLONE)
+        checkBox2.isChecked = filterByTypeTmp.contains(ToiletType.IN_A_PARK)
+        checkBox3.isChecked = filterByTypeTmp.contains(ToiletType.IN_SHOPPING_MAIL)
+
+        checkBox1.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                filterByTypeTmp.add(ToiletType.STANDLONE)
+            } else {
+                filterByTypeTmp.remove(ToiletType.STANDLONE)
+            }
+        }
+
+        checkBox2.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                filterByTypeTmp.add(ToiletType.IN_A_PARK)
+            } else {
+                filterByTypeTmp.remove(ToiletType.IN_A_PARK)
+            }
+        }
+
+        checkBox3.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                filterByTypeTmp.add(ToiletType.IN_SHOPPING_MAIL)
+            } else {
+                filterByTypeTmp.remove(ToiletType.IN_SHOPPING_MAIL)
+            }
+        }
+        dialog.setTitle("Filter:")
+            .setView(dialogView)
+            .setNegativeButton("Back") { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton("Confirm") { dialog, which ->
+                filterByType = filterByTypeTmp
+                dialog.cancel()
+            }
+
+        return dialog.create()
+    }
+
+    private fun createAddNewDialog(context: Context): AlertDialog {
+        dialogView = LayoutInflater.from(context).inflate(R.layout.add_new_dialog, null)
+
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle("Add new")
+            .setView(dialogView)
+            .setNegativeButton("Back") { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton("Add") { dialog, which ->
+                dialog.cancel()
+                //TODO logika
+
+                SnackBarUtils.showSnackBarWithCloseButton(
+                    requireView(),
+                    "New toilet successfully added"
+                )
+            }
+            .create()
+
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setGravity(Gravity.CENTER)
+
+        val button = dialogView.findViewById<MaterialButton>(R.id.button_choose_from_map)
+        button.setOnClickListener {
+            showMapPicker()
+        }
+
+        return dialog
+    }
+
+    private fun showMapPicker() {
+        val intent = Intent(this.requireContext(), MapPickerActivity::class.java)
+        startActivityForResult(intent, MAP_PICKER_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MAP_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val latitude = data?.getDoubleExtra("latitude", 0.0)
+            val longitude = data?.getDoubleExtra("longitude", 0.0)
+
+            val latitudeInput = dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
+            latitudeInput.setText("$latitude")
+            val longitudeInput =
+                dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
+            longitudeInput.setText("$longitude")
+        }
     }
 }
