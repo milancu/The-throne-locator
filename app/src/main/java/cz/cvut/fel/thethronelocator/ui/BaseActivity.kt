@@ -1,8 +1,11 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.RelativeLayout
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -50,7 +53,7 @@ open class BaseActivity : FragmentActivity() {
             }
         }
 
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        bottomNavigationView.menu.findItem(R.id.mapFragment).setOnMenuItemClickListener  { item ->
             if (item.itemId == R.id.mapFragment) {
                 val currentTime = System.currentTimeMillis()
                 if (currentTime - lastClickTime > TIME_LIMIT) {
