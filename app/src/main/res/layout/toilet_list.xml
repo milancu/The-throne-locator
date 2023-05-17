@@ -58,11 +58,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="add_button"
         android:text="Add new"
-        android:layout_marginBottom="18dp"
         app:icon="@drawable/baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="@+id/toiletList"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -136,7 +136,13 @@ class MapFragment : Fragment(), OnMapReadyCallback  {
         }
 
         clusterManager.setOnClusterItemClickListener {item ->
-            val bundle = bundleOf("toiletId" to item.id)
+            val bundle = Bundle().apply {
+                putInt("toiletId", item.id)
+                putString("name", item.name)
+                putFloat("latitude", item.position.latitude.toFloat())
+                putFloat("longitude", item.position.longitude.toFloat())
+            }
+
             navController.navigate(R.id.action_to_detail, bundle)
             true
         }

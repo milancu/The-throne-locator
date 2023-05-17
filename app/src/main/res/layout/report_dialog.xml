@@ -17,7 +17,7 @@
         android:id="@+id/input_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
+        android:hint="Issue"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
