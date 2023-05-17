@@ -30,5 +30,14 @@
         <argument
             android:name="toiletId"
             app:argType="integer" />
+        <argument
+            android:name="latitude"
+            app:argType="float" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
     </fragment>
 </navigation>

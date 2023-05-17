@@ -3,12 +3,12 @@ package cz.cvut.fel.thethronelocator.model
 import java.time.LocalDateTime
 
 data class Toilet(
-    val name:String,
-    val type:String,
-    val address:String,
-    val latitude: Double,
-    val longitude: Double,
-    val features:List<Feature>,
-    val openingTime: LocalDateTime,
-    val closingTime: LocalDateTime,
+    val name: String? = null,
+    val type: String? = null,
+    val address: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val features: List<Feature>? = emptyList(),
+    val openingTime: LocalDateTime? = null,
+    val closingTime: LocalDateTime? = null,
 )
