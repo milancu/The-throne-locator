@@ -108,7 +108,7 @@ open class BaseActivity : AppCompatActivity() {
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {
-                        menu?.findItem(R.id.profileFragment)?.setIcon(R.drawable.baseline_account_circle_30)
+                        menu?.findItem(R.id.profileFragment)?.setIcon(R.drawable.avatar)
                     }
                 })
         }

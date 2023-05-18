@@ -14,7 +14,10 @@
             android:id="@+id/profileImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/baseline_account_circle_30" />
+            android:layout_gravity="center"
+            android:layout_marginTop="86dp"
+            android:layout_marginBottom="28dp"
+            app:srcCompat="@drawable/avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"

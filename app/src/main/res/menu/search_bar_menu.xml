@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/profileFragment"
-        android:icon="@drawable/baseline_account_circle_30"
+        android:icon="@drawable/avatar"
         android:title="Avatar"
-        android:menuCategory="secondary"
+
         app:showAsAction="always" />
 </menu>

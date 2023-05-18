@@ -2,6 +2,7 @@ package cz.cvut.fel.thethronelocator.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -55,6 +56,18 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
         binding.logoutButton.setOnClickListener {
             auth.signOut()
+            auth.signInAnonymously()
+                .addOnCompleteListener() { task ->
+                    if (task.isSuccessful) {
+                        navController.popBackStack()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
         }
     }
 }
