@@ -2,21 +2,31 @@ package cz.cvut.fel.thethronelocator.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import cz.cvut.fel.thethronelocator.R
+import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
+import cz.cvut.fel.thethronelocator.auth.UserData
 import cz.cvut.fel.thethronelocator.databinding.FragmentProfileBinding
+import kotlinx.coroutines.launch
 
 class ProfileFragment: Fragment(R.layout.fragment_profile) {
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
-    private lateinit var currentUser: FirebaseUser
+    private lateinit var currentUser: UserData
+    private lateinit var signInClient: SignInClient
+    private lateinit var googleAuthClient: GoogleAuthClient
+    private lateinit var savedStateHandle: SavedStateHandle
+
+    companion object {
+        const val LOGOUT_SUCCESSFUL: String = "LOGOUT_SUCCESSFUL"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +50,13 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentProfileBinding.bind(view)
 
-        auth = FirebaseAuth.getInstance()
+        savedStateHandle = navController.previousBackStackEntry!!.savedStateHandle
+        savedStateHandle[LOGOUT_SUCCESSFUL] = false
 
-        currentUser = auth.currentUser!!
+        signInClient = Identity.getSignInClient(requireActivity())
+        googleAuthClient = GoogleAuthClient(requireContext(), signInClient)
+
+        currentUser = googleAuthClient.getUser()!!
         if (currentUser.isAnonymous) {
             navController.navigate(R.id.profileGuestFragment)
         } else {
@@ -51,23 +65,15 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
     }
 
     private fun showUserDetails() {
-        binding.fullName.text = currentUser.displayName
-        binding.username.text = currentUser.email
+        binding.fullName.text = currentUser.name
+        binding.username.text = currentUser.username
+        binding.profileImage.setImageDrawable(currentUser.profilePicture)
 
         binding.logoutButton.setOnClickListener {
-            auth.signOut()
-            auth.signInAnonymously()
-                .addOnCompleteListener() { task ->
-                    if (task.isSuccessful) {
-                        navController.popBackStack()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-                }
+            lifecycleScope.launch {
+                googleAuthClient.signOut()
+                navController.popBackStack()
+            }
         }
     }
 }
