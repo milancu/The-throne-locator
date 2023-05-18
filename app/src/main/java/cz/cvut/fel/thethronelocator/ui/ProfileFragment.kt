@@ -3,40 +3,23 @@ package cz.cvut.fel.thethronelocator.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.databinding.FragmentProfileBinding
 
 class ProfileFragment: Fragment(R.layout.fragment_profile) {
     private lateinit var binding: FragmentProfileBinding
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentProfileBinding.bind(view)
-
-        val auth = FirebaseAuth.getInstance()
-
-        val navController = findNavController()
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            navController.navigate(R.id.profileGuestFragment)
-        } else {
-            binding.fullName.text = currentUser.displayName
-            binding.username.text = currentUser.email
-        }
-
-        binding.logoutButton.setOnClickListener {
-            auth.signOut()
-        }
-    }
+    private lateinit var auth: FirebaseAuth
+    private lateinit var navController: NavController
+    private lateinit var currentUser: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val navController = findNavController()
+        navController = findNavController()
 
         val currentBackStackEntry = navController.currentBackStackEntry!!
         val savedStateHandle = currentBackStackEntry.savedStateHandle
@@ -50,5 +33,28 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
                     navController.navigate(startDestination, null, navOptions)
                 }
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentProfileBinding.bind(view)
+
+        auth = FirebaseAuth.getInstance()
+
+        currentUser = auth.currentUser!!
+        if (currentUser.isAnonymous) {
+            navController.navigate(R.id.profileGuestFragment)
+        } else {
+            showUserDetails()
+        }
+    }
+
+    private fun showUserDetails() {
+        binding.fullName.text = currentUser.displayName
+        binding.username.text = currentUser.email
+
+        binding.logoutButton.setOnClickListener {
+            auth.signOut()
+        }
     }
 }

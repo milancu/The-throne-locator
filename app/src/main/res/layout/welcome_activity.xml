@@ -20,12 +20,18 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="WELCOME" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/loginGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Continue with Google" />
+
+        <Button
+            android:id="@+id/loginAnon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue as Guest" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,4 +17,6 @@ class ProfileGuestFragment: Fragment() {
         savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
         savedStateHandle[LOGIN_SUCCESSFUL] = false
     }
+
+
 }
