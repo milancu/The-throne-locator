@@ -17,8 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
+            app:forceDefaultNavigationOnClickListener="true"
             android:hint="Hinted search text" />
+
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <!-- Main content of the activity -->
     <androidx.fragment.app.FragmentContainerView
@@ -40,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation_menu" />
+
 </RelativeLayout>
 
 

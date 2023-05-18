@@ -40,4 +40,14 @@
             android:name="longitude"
             app:argType="float" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
+    <fragment
+        android:id="@+id/profileGuestFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ProfileGuestFragment"
+        android:label="ProfileGuestFragment"
+        tools:layout="@layout/fragment_profile_guest"/>
 </navigation>

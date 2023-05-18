@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "682058939213",
+    "project_id": "the-throne-locator",
+    "storage_bucket": "the-throne-locator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682058939213:android:7f77d06034c2cf82069504",
+        "android_client_info": {
+          "package_name": "cz.cvut.fel.thethronelocator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682058939213-fae2c5gqa7ot2i4o91huhdnl73qlsqfc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cz.cvut.fel.thethronelocator",
+            "certificate_hash": "d4e61824440a90f89cc11e197ec79eb3adb95397"
+          }
+        },
+        {
+          "client_id": "682058939213-19q0qjd4o20lik81s0f99tm05s9jk42j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr8eB9jkRkZfe0_Crb6AO7QdUzs4RnJxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682058939213-19q0qjd4o20lik81s0f99tm05s9jk42j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
