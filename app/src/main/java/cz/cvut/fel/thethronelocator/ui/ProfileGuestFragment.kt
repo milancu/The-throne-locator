@@ -1,5 +1,6 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import UserViewModel
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -25,6 +27,7 @@ class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
     private lateinit var navController: NavController
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var savedStateHandle: SavedStateHandle
+    private val userViewModel: UserViewModel by viewModels()
 
     companion object {
         const val LOGIN_SUCCESSFUL: String = "LOGIN_SUCCESSFUL"
@@ -83,6 +86,7 @@ class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
                     googleAuthClient.linkWithIntent(result.data ?: return@launch)
                 if (signInResult.user != null) {
                     savedStateHandle[LOGIN_SUCCESSFUL] = true
+                    userViewModel.updateUserData(signInResult.user)
                     navController.popBackStack()
                 } else {
                     Toast.makeText(activity, signInResult.errorMessage, Toast.LENGTH_SHORT).show()

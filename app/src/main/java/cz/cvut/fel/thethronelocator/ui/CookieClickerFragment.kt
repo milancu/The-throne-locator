@@ -3,20 +3,23 @@ package cz.cvut.fel.thethronelocator.ui
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
-import com.google.android.material.button.MaterialButton
+import androidx.fragment.app.Fragment
 import cz.cvut.fel.thethronelocator.R
+import cz.cvut.fel.thethronelocator.databinding.FragmentCookieClickerBinding
 import kotlin.random.Random
 
-class CookieClicker : FragmentActivity() {
+
+class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
+    private lateinit var binding: FragmentCookieClickerBinding
     private var clickCount = 0
     private var isTimerRunning = false
     private var playAgain = true
@@ -25,14 +28,21 @@ class CookieClicker : FragmentActivity() {
     private var screenWidth: Int = 0
     private var screenHeight: Int = 0
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val fragmentBinding = FragmentCookieClickerBinding.inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.cookie_clicker)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val textCounter = findViewById<TextView>(R.id.text_counter)
-        val playButton = findViewById<MaterialButton>(R.id.button_play_again)
-        containerLayout = findViewById(R.id.cookie_clicker_layout)
+        val textCounter = binding.textCounter
+        val playButton = binding.buttonPlayAgain
+        containerLayout = binding.cookieClickerLayout
 
 
         textCounter.setOnClickListener {
@@ -47,10 +57,8 @@ class CookieClicker : FragmentActivity() {
                 containerLayout.addView(imageView)
 
 
-                val displayMetrics = DisplayMetrics()
-                windowManager.defaultDisplay.getMetrics(displayMetrics)
-                screenWidth = displayMetrics.widthPixels
-                screenHeight = displayMetrics.heightPixels
+                screenWidth = Resources.getSystem().displayMetrics.widthPixels
+                screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
                 imageView.rotation = Random.nextInt(360).toFloat()
 
@@ -115,8 +123,8 @@ class CookieClicker : FragmentActivity() {
         }
 
         playButton.setOnClickListener {
-            val textCounter = findViewById<TextView>(R.id.text_counter)
-            val textTimer = findViewById<TextView>(R.id.text_timer)
+            val textCounter = binding.textCounter
+            val textTimer = binding.textTimer
 
             playAgain = true
             clickCount = 0
@@ -128,7 +136,7 @@ class CookieClicker : FragmentActivity() {
     }
 
     private fun createImageView(): ImageView {
-        val imageView = ImageView(this)
+        val imageView = ImageView(context)
         imageView.setImageResource(R.drawable.toilet_paper)
         imageView.layoutParams = RelativeLayout.LayoutParams(
             RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -149,14 +157,14 @@ class CookieClicker : FragmentActivity() {
 
         countDownTimer = object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
-                val textTimer = findViewById<TextView>(R.id.text_timer)
+                val textTimer = binding.textTimer
                 val seconds = ((millisUntilFinished / 1000) % 60)
                 textTimer.text = (seconds.toString())
             }
 
             override fun onFinish() {
-                val playButton = findViewById<MaterialButton>(R.id.button_play_again)
-                val texRecord = findViewById<TextView>(R.id.text_record)
+                val playButton = binding.buttonPlayAgain
+                val texRecord = binding.textRecord
 
                 isTimerRunning = false
                 playAgain = false
@@ -171,7 +179,7 @@ class CookieClicker : FragmentActivity() {
     }
 
     private fun updateCounterText() {
-        val textCounter = findViewById<TextView>(R.id.text_counter)
+        val textCounter = binding.textCounter
         textCounter.text = clickCount.toString()
     }
 }

@@ -3,8 +3,8 @@ package cz.cvut.fel.thethronelocator.auth
 import android.graphics.drawable.Drawable
 
 data class SignInResult (
-    val user: UserData?,
-    val errorMessage: String?
+    val user: UserData? = null,
+    val errorMessage: String? = null,
 )
 
 data class UserData(

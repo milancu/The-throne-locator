@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">The Throne Locator</string>
+    <string name="_0_7km">0.7km</string>
+    <string name="toilet_1">Toilet 1</string>
+    <string name="navigate_button">navigate_button</string>
+    <string name="navigate">Navigate</string>
 </resources>

@@ -10,6 +10,10 @@
         app:destination="@id/toiletDetailFragment"
         />
 
+    <action
+        android:id="@+id/action_to_map_picker"
+        app:destination="@id/mapPickerFragment" />
+
     <fragment
         android:id="@+id/mapFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.MapFragment"
@@ -20,7 +24,7 @@
         android:id="@+id/toiletListFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ToiletListFragment"
         android:label="ToiletListFragment"
-        tools:layout="@layout/toilet_list">
+        tools:layout="@layout/fragment_toilet_list">
     </fragment>
     <fragment
         android:id="@+id/toiletDetailFragment"
@@ -50,4 +54,9 @@
         android:name="cz.cvut.fel.thethronelocator.ui.ProfileGuestFragment"
         android:label="ProfileGuestFragment"
         tools:layout="@layout/fragment_profile_guest"/>
+    <dialog
+        android:id="@+id/mapPickerFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.MapPickerFragment"
+        android:label="MapPickerFragment"
+        tools:layout="@layout/fragment_map_picker" />
 </navigation>

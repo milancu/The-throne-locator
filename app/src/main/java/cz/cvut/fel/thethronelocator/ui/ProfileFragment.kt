@@ -1,8 +1,11 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import UserViewModel
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -23,6 +26,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
     private lateinit var signInClient: SignInClient
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var savedStateHandle: SavedStateHandle
+    private val userViewModel: UserViewModel by viewModels()
 
     companion object {
         const val LOGOUT_SUCCESSFUL: String = "LOGOUT_SUCCESSFUL"
@@ -71,8 +75,13 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
         binding.logoutButton.setOnClickListener {
             lifecycleScope.launch {
-                googleAuthClient.signOut()
-                navController.popBackStack()
+                val signInResult = googleAuthClient.signOut()
+                if (signInResult.user != null) {
+                    userViewModel.updateUserData(signInResult.user)
+                    navController.popBackStack()
+                } else {
+                    Toast.makeText(requireActivity(), signInResult.errorMessage, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -1,11 +1,9 @@
 package cz.cvut.fel.thethronelocator.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -64,15 +62,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     //>>>>>>>>>>>>>>>>>>>>>>>>>>TADY HODNOTY PRO FILTRACI<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     private var filterByType: List<ToiletType> = emptyList()
 
-    companion object {
-        private const val MAP_PICKER_REQUEST_CODE = 123
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -103,6 +97,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.getToiletPoints()
+
+        navController.currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Bundle>(MapPickerFragment.PICKED_COORDINATES)?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                val latitude = result.getDouble("latitude")
+                val longitude = result.getDouble("longitude")
+
+                val latitudeInput =
+                    dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
+                latitudeInput.setText("$latitude")
+                val longitudeInput =
+                    dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
+                longitudeInput.setText("$longitude")
+            }
 
 
         val filterIconButton = binding.filterIconButton
@@ -147,9 +156,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
         )
 
-        val metrics = DisplayMetrics()
-        requireActivity().windowManager.defaultDisplay.getMetrics(metrics)
-
+        val metrics = Resources.getSystem().displayMetrics
         val widthDp = (metrics.widthPixels / metrics.density).toInt()
         val heightDp = (metrics.heightPixels / metrics.density).toInt()
 
@@ -174,17 +181,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val builder = LatLngBounds.builder()
 
             for (item in cluster.items) {
-                builder.include(item.position);
+                builder.include(item.position)
             }
 
             // Get the LatLngBounds
-            val bounds = builder.build();
+            val bounds = builder.build()
 
             // Animate camera to the bounds
             try {
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
             } catch (e: Exception) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
 
             true
@@ -293,21 +300,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun showMapPicker() {
-        val intent = Intent(this.requireContext(), MapPickerActivity::class.java)
-        startActivityForResult(intent, MAP_PICKER_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MAP_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val latitude = data?.getDoubleExtra("latitude", 0.0)
-            val longitude = data?.getDoubleExtra("longitude", 0.0)
-
-            val latitudeInput = dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
-            latitudeInput.setText("$latitude")
-            val longitudeInput =
-                dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
-            longitudeInput.setText("$longitude")
-        }
+        navController.navigate(R.id.action_to_map_picker)
     }
 }

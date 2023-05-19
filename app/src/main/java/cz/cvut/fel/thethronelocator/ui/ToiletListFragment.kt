@@ -1,8 +1,6 @@
 package cz.cvut.fel.thethronelocator.ui
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -26,8 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.ToiletListAdapter
-import cz.cvut.fel.thethronelocator.databinding.FragmentMapBinding
-import cz.cvut.fel.thethronelocator.databinding.ToiletListBinding
+import cz.cvut.fel.thethronelocator.databinding.FragmentToiletListBinding
 import cz.cvut.fel.thethronelocator.model.Toilet
 import cz.cvut.fel.thethronelocator.model.enum.SortType
 import cz.cvut.fel.thethronelocator.model.enum.ToiletType
@@ -35,13 +32,8 @@ import cz.cvut.fel.thethronelocator.repository.ToiletRepository
 import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
 
 
-class ToiletListFragment : Fragment() {
-    private var _binding: ToiletListBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-    private val currentView: View? = null
+class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
+    private lateinit var binding: FragmentToiletListBinding
     private lateinit var navController: NavController
     private val toiletRepository = ToiletRepository()
     private lateinit var dialogView: View
@@ -63,17 +55,13 @@ class ToiletListFragment : Fragment() {
     //>>>>>>>>>>>>>>>>>takze neco jako tohle<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //>>>>>>>>>>>>>>>>>toiletList.filter { filterByType.contains(it.type) }.sortedBy { it.latitude }//.sortedBy { it.rating }<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    companion object {
-        private const val MAP_PICKER_REQUEST_CODE = 123
-    }
-
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = ToiletListBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View {
+        val fragmentBinding = FragmentToiletListBinding.inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -106,6 +94,21 @@ class ToiletListFragment : Fragment() {
         floatingAddNewActionButton.setOnClickListener {
             addNewDialog.show()
         }
+
+        navController.currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Bundle>(MapPickerFragment.PICKED_COORDINATES)?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                val latitude = result.getDouble("latitude")
+                val longitude = result.getDouble("longitude")
+
+                val latitudeInput =
+                    dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
+                latitudeInput.setText("$latitude")
+                val longitudeInput =
+                    dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
+                longitudeInput.setText("$longitude")
+            }
     }
 
     override fun onAttach(context: Context) {
@@ -258,21 +261,6 @@ class ToiletListFragment : Fragment() {
     }
 
     private fun showMapPicker() {
-        val intent = Intent(this.requireContext(), MapPickerActivity::class.java)
-        startActivityForResult(intent, MAP_PICKER_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MAP_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val latitude = data?.getDoubleExtra("latitude", 0.0)
-            val longitude = data?.getDoubleExtra("longitude", 0.0)
-
-            val latitudeInput = dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
-            latitudeInput.setText("$latitude")
-            val longitudeInput =
-                dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
-            longitudeInput.setText("$longitude")
-        }
+        navController.navigate(R.id.action_to_map_picker)
     }
 }

@@ -74,6 +74,51 @@ class GoogleAuthClient(
         }
     }
 
+    private suspend fun executeSignIn(signInAction: suspend () -> FirebaseUser?): SignInResult {
+        return try {
+            val user = signInAction.invoke()
+            SignInResult(
+                user = user?.run {
+                    UserData(
+                        userId = uid,
+                        username = email,
+                        name = displayName,
+                        profilePicture = getUserImage(this),
+                        isAnonymous = isAnonymous,
+                    )
+                },
+                errorMessage = null
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            SignInResult(
+                user = null,
+                errorMessage = e.message
+            )
+        }
+    }
+
+    suspend fun signOut(): SignInResult {
+        return try {
+            oneTapClient.signOut().await()
+            auth.signOut()
+            signInAnonymously()
+        } catch(e: Exception) {
+            e.printStackTrace()
+            if(e is CancellationException) throw e
+            Toast.makeText(
+                context,
+                "Something went wrong.",
+                Toast.LENGTH_SHORT,
+            ).show()
+            SignInResult(
+                user = null,
+                errorMessage = e.message
+            )
+        }
+    }
+
     fun getUser(): UserData? = auth.currentUser?.run {
         UserData(
             userId = uid,
@@ -108,47 +153,6 @@ class GoogleAuthClient(
         }
 
         return drawable
-    }
-
-    private suspend fun executeSignIn(signInAction: suspend () -> FirebaseUser?): SignInResult {
-        return try {
-            val user = signInAction.invoke()
-            SignInResult(
-                user = user?.run {
-                    UserData(
-                        userId = uid,
-                        username = email,
-                        name = displayName,
-                        profilePicture = getUserImage(this),
-                        isAnonymous = isAnonymous,
-                    )
-                },
-                errorMessage = null
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-            SignInResult(
-                user = null,
-                errorMessage = e.message
-            )
-        }
-    }
-
-    suspend fun signOut() {
-        try {
-            oneTapClient.signOut().await()
-            auth.signOut()
-            signInAnonymously()
-        } catch(e: Exception) {
-            e.printStackTrace()
-            if(e is CancellationException) throw e
-            Toast.makeText(
-                context,
-                "Something went wrong.",
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
     }
 
     private fun buildSignInRequest(): BeginSignInRequest {

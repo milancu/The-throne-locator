@@ -16,19 +16,13 @@
         android:theme="@style/Theme.TheThroneLocator"
         tools:targetApi="31">
         <activity
-            android:name=".ui.BaseActivity"
-            android:theme="@style/Theme.TheThroneLocator">
-        </activity>
-        <activity android:name=".ui.WelcomeActivity"
-            android:exported="true" android:label="@string/app_name">
+            android:name=".ui.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MapPickerActivity"/>
-        <activity android:name=".ui.CookieClicker"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
