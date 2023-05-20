@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
     app:startDestination="@id/welcomeFragment">
+
+    <action
+        android:id="@+id/action_to_detail"
+        app:destination="@id/toiletDetailFragment" />
+
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.WelcomeFragment"
@@ -23,6 +28,27 @@
         <action
             android:id="@+id/action_mainFragment_to_cookieClickerFragment"
             app:destination="@id/cookieClickerFragment" />
+        <action
+            android:id="@+id/action_to_detail"
+            app:destination="@id/toiletDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/toiletDetailFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ToiletDetailFragment"
+        android:label="ToiletDetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="latitude"
+            app:argType="float" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="toiletId"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
     </fragment>
     <fragment
         android:id="@+id/cookieClickerFragment"

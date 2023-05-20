@@ -28,6 +28,15 @@
         android:label="ToiletListFragment"
         tools:layout="@layout/fragment_toilet_list"></fragment>
     <fragment
+        android:id="@+id/mainFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_to_detail"
+            app:destination="@id/toiletDetailFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/toiletDetailFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ToiletDetailFragment"
         android:label="ToiletDetailFragment"
