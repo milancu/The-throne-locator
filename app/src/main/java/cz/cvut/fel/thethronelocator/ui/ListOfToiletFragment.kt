@@ -1,20 +1,14 @@
 package cz.cvut.fel.thethronelocator.ui
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.CheckBox
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,8 +33,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
     private lateinit var dialogView: View
     private lateinit var filterDialog: AlertDialog
 
-    //    private lateinit var addNewDialog: AlertDialog
-    private lateinit var sortDialog: AlertDialog
     private lateinit var viewModel: ToiletViewModel
 
 
@@ -52,10 +44,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
             ToiletType.STANDALONE
         ).toMutableList()
 
-    companion object {
-        private const val MAP_PICKER_REQUEST_CODE = 123
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,7 +53,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
         return fragmentBinding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -87,11 +74,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
         val floatingFilterActionButton = binding.floatingActionButtonFilter
         floatingFilterActionButton.setOnClickListener {
             filterDialog.show()
-        }
-
-        val floatingSortActionButton = binding.floatingActionButtonSort
-        floatingSortActionButton.setOnClickListener {
-            sortDialog.show()
         }
 
         val floatingAddNewActionButton = binding.floatingActionButtonAddNew
@@ -118,7 +100,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        sortDialog = createSortDialog(context)
         filterDialog = createFilterDialog(context)
 
         filterDialog.window?.setLayout(
@@ -126,56 +107,6 @@ class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         filterDialog.window?.setGravity(Gravity.CENTER)
-
-        sortDialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        sortDialog.window?.setGravity(Gravity.CENTER)
-    }
-
-    private fun createSortDialog(context: Context): AlertDialog {
-        var selectedSortByTmp: SortType = selectedSortBy
-
-        val dialog = MaterialAlertDialogBuilder(context)
-
-        val dialogView = layoutInflater.inflate(R.layout.sort_dialog, null)
-        val radioGroup = dialogView.findViewById<RadioGroup>(R.id.radioGroup)
-
-        val radioButton1 = dialogView.findViewById<RadioButton>(R.id.radio_button_1)
-        val radioButton2 = dialogView.findViewById<RadioButton>(R.id.radio_button_2)
-
-        if (selectedSortBy === SortType.NEAREST) {
-            radioButton1.isChecked = true
-            radioButton2.isChecked = false
-        } else {
-            radioButton1.isChecked = false
-            radioButton2.isChecked = true
-        }
-
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            selectedSortByTmp = when (checkedId) {
-                R.id.radio_button_1 -> SortType.NEAREST
-                R.id.radio_button_2 -> SortType.RATING
-                else -> {
-                    SortType.RATING
-                }
-            }
-        }
-
-        dialog.setTitle("Sort by:")
-            .setView(dialogView)
-            .setNegativeButton("Back") { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton("Confirm") { dialog, which ->
-                selectedSortBy = selectedSortByTmp
-                Log.d(TAG, "createSortDialog: ${selectedSortBy}")
-                viewModel.getToiletPoints(filterByType, selectedSortBy)
-                dialog.cancel()
-            }
-
-        return dialog.create()
     }
 
     private fun createFilterDialog(context: Context): AlertDialog {

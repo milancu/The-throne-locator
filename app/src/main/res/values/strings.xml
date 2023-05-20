@@ -8,4 +8,6 @@
     <string name="welcome">WELCOME</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as Guest</string>
+    <string name="filter_button">Filter button</string>
+    <string name="add_new">Add new</string>
 </resources>

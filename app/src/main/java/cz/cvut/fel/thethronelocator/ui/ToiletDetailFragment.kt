@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -24,6 +23,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -57,7 +57,6 @@ class ToiletDetailFragment : Fragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
-    private lateinit var dialogView: View
     private lateinit var reminderDialog: AlertDialog
     private lateinit var ratingDialog: AlertDialog
     private lateinit var bookMarkButton: CheckBox
@@ -210,9 +209,6 @@ class ToiletDetailFragment : Fragment() {
         longitude = toilet.longitude!!
         val openingTime: String? = toilet.openingTime
         val img = toilet.img
-        var distance: String? = null
-
-        binding.textViewDistance.text = "${distance}km"
 
 
         //binding for rating list
@@ -222,9 +218,6 @@ class ToiletDetailFragment : Fragment() {
 
         //binding for toilet name
         binding.toiletName.text = toiletName
-
-        //binding for distance
-        binding.textViewDistance.text = "${distance}km"
 
         //binding for toiletRating
         val overAllRating = toiletRatings?.size ?: 0
@@ -258,19 +251,17 @@ class ToiletDetailFragment : Fragment() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel.
-            val mChannel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            // Register the channel with the system. You can't change the importance
-            // or other notification behaviors after this.
-            val notificationManager =
-                requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(mChannel)
-        }
+        // Create the NotificationChannel.
+        val mChannel = NotificationChannel(
+            CHANNEL_ID,
+            CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        // Register the channel with the system. You can't change the importance
+        // or other notification behaviors after this.
+        val notificationManager =
+            requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
     }
 
     private fun openMapWithLocation(latitude: Double, longitude: Double) {
@@ -351,6 +342,13 @@ class ToiletDetailFragment : Fragment() {
             with(NotificationManagerCompat.from(requireContext())) {
                 // notificationId is a unique int for each notification that you must define
 
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    askForNotificationPermission()
+                }
                 notify(1, notification)
             }
         }, (delay * 1000 * 60).toLong())
