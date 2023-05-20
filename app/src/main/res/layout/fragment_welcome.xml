@@ -1,38 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.WelcomeFragment">
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="5.75"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/launcher_background" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/toilet_paper" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4.25">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="WELCOME" />
+            android:layout_height="87dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="65dp"
+            android:layout_marginRight="40dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/nunito_extrabold"
+            android:text="@string/welcome"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMaxTextSize="64dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/loginGoogle"
+        <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Continue with Google" />
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="60dp"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
-        <Button
-            android:id="@+id/loginAnon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Continue as Guest" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/loginGoogle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:text="@string/continue_with_google"
+                app:cornerRadius="10dp"
+                style="?attr/materialButtonOutlinedStyle"
+                app:icon="@drawable/googleg_standard_color_18"
+                app:iconTint="@null"
+                app:iconGravity="start"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/loginAnon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/continue_as_guest"
+                app:cornerRadius="10dp"
+                style="?attr/materialButtonOutlinedStyle"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

@@ -5,4 +5,7 @@
     <string name="navigate_button">navigate_button</string>
     <string name="navigate">Navigate</string>
     <string name="errorMissingPhoto">Please add photo of the toilet</string>
+    <string name="welcome">WELCOME</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_as_guest">Continue as Guest</string>
 </resources>
