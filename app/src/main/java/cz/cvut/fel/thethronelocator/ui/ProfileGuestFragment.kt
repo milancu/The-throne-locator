@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
 import cz.cvut.fel.thethronelocator.databinding.FragmentProfileGuestBinding
+import cz.cvut.fel.thethronelocator.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
@@ -25,6 +26,7 @@ class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
     private lateinit var navController: NavController
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var savedStateHandle: SavedStateHandle
+    private val userRepository = UserRepository()
 
     companion object {
         const val LOGIN_SUCCESSFUL: String = "LOGIN_SUCCESSFUL"
@@ -83,6 +85,15 @@ class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
                     googleAuthClient.linkWithIntent(result.data ?: return@launch)
                 if (signInResult.user != null) {
                     savedStateHandle[LOGIN_SUCCESSFUL] = true
+                    userRepository.createUser(
+                        googleAuthClient = googleAuthClient,
+                        onError = {
+                            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                        },
+                        onSuccess = {
+
+                        }
+                    )
                     navController.popBackStack()
                 } else {
                     Toast.makeText(activity, signInResult.errorMessage, Toast.LENGTH_SHORT).show()

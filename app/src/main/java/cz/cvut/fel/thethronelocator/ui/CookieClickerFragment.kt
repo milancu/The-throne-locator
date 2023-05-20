@@ -63,13 +63,14 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
         val texRecord = binding.textRecord
         containerLayout = binding.cookieClickerLayout
 
-
-        userRepository.getUserById(googleAuthClient.getUser()!!.userId, callback = {
-            if (it != null) {
-                currentUser = it
-                texRecord.text = ("Your highest score: ${currentUser.record}")
-            }
-        })
+        if (!googleAuthClient.getUser()!!.isAnonymous) {
+            userRepository.getUserById(googleAuthClient.getUser()!!.userId, callback = {
+                if (it != null) {
+                    currentUser = it
+                    texRecord.text = ("Your highest score: ${currentUser.record}")
+                }
+            })
+        }
 
         leaderboardButton.setOnClickListener {
             navController.navigate(R.id.action_cookieClicker_to_leaderboard)
@@ -203,18 +204,22 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
                 isTimerRunning = false
                 playAgain = false
 
-                if (clickCount > currentUser.record!!) {
-                    userRepository.setNewRecord(currentUser.id!!, clickCount)
-                }
+                if (!googleAuthClient.getUser()!!.isAnonymous) {
+                    if (clickCount > currentUser.record!!) {
+                        userRepository.setNewRecord(currentUser.id!!, clickCount)
+                    }
 
-                playButton.visibility = View.VISIBLE
-                if (clickCount > currentUser.record!!) {
-                    texRecord.text = ("Your highest score: $clickCount")
-                    textView.visibility = View.GONE
+                    playButton.visibility = View.VISIBLE
+                    if (clickCount > currentUser.record!!) {
+                        texRecord.text = ("Your highest score: $clickCount")
+                        textView.visibility = View.GONE
 
+                    } else {
+                        texRecord.text = ("Your highest score: ${currentUser.record}")
+                        textView.visibility = View.VISIBLE
+                    }
                 } else {
-                    texRecord.text = ("Your highest score: ${currentUser.record}")
-                    textView.visibility = View.VISIBLE
+                    texRecord.text = ("Your score: $clickCount")
                 }
             }
         }

@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,6 +32,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.storage.FirebaseStorage
@@ -46,7 +48,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.Date
 import java.util.UUID
-import kotlin.math.log
+
 
 class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
     private lateinit var binding: FragmentAddNewToiletBinding
@@ -71,8 +73,8 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private var permissionDenied = false
     private var permissionGranted = false
-
-
+    private var isPhotoImported = false
+    private lateinit var errorMessage: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -138,7 +140,7 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
             }
         }
         saveButton.setOnClickListener {
-            addToilet()
+            if (validateInput()) addToilet()
         }
         backButton.setOnClickListener {
             navController.popBackStack()
@@ -223,7 +225,87 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
         }
     }
 
+    private fun validateInput(): Boolean {
+        val inputLayoutName: TextInputLayout = binding.inputName
+        val editTextName: TextInputEditText = binding.inputToiletName
+
+        val inputLayoutType: TextInputLayout = binding.inputToiletType
+        val autoCompleteType: AutoCompleteTextView = binding.toiletType
+
+        val inputLayoutOpeningTime: TextInputLayout = binding.textInputOpenTimeLayout
+        val autoCompleteOpeningTime: AutoCompleteTextView = binding.timeOpenInput
+
+        val inputLayoutClosingTime: TextInputLayout = binding.textInputCloseTimeLayout
+        val autoCompleteClosingTime: AutoCompleteTextView = binding.timeCloseInput
+
+        val inputLayoutLatitude: TextInputLayout = binding.textInputLatitudeLayout
+        val editTextLatitude: TextInputEditText = binding.inputLatitudeText
+
+        val inputLayoutLongitude: TextInputLayout = binding.textInputLongitudeLayout
+        val editTextLongitude: TextInputEditText = binding.inputLongitudeText
+
+        errorMessage = binding.textViewErrorMessagePhoto
+
+        var isValid = true
+
+        val name = editTextName.text.toString().trim { it <= ' ' }
+        if (name.isEmpty()) {
+            inputLayoutName.error = "Please enter a name"
+            isValid = false
+        } else {
+            inputLayoutName.error = null
+        }
+
+        val type = autoCompleteType.text.toString().trim { it <= ' ' }
+        if (type.isEmpty()) {
+            inputLayoutType.error = "Please enter a toilet type"
+            isValid = false
+        } else {
+            inputLayoutType.error = null
+        }
+
+        val openingTime = autoCompleteOpeningTime.text.toString().trim { it <= ' ' }
+        if (openingTime.isEmpty()) {
+            inputLayoutOpeningTime.error = "Please enter an opening time"
+            isValid = false
+        } else {
+            inputLayoutOpeningTime.error = null
+        }
+
+        val closingTime = autoCompleteClosingTime.text.toString().trim { it <= ' ' }
+        if (closingTime.isEmpty()) {
+            inputLayoutClosingTime.error = "Please enter a closing time"
+            isValid = false
+        } else {
+            inputLayoutClosingTime.error = null
+        }
+
+        val latitude = editTextLatitude.text.toString().trim { it <= ' ' }
+        if (latitude.isEmpty()) {
+            inputLayoutLatitude.error = "Please enter a latitude"
+            isValid = false
+        } else {
+            inputLayoutLatitude.error = null
+        }
+
+        val longitude = editTextLongitude.text.toString().trim { it <= ' ' }
+        if (longitude.isEmpty()) {
+            inputLayoutLongitude.error = "Please enter a longitude"
+            isValid = false
+        } else {
+            inputLayoutLongitude.error = null
+        }
+
+        if (!isPhotoImported) {
+            isValid = false
+            errorMessage.visibility = View.VISIBLE
+        }
+
+        return isValid
+    }
+
     private fun addToilet() {
+        errorMessage.visibility = View.GONE
         val storage = FirebaseStorage.getInstance()
         val storageRef: StorageReference = storage.reference
         val fileName = "photo_${UUID.randomUUID()}.jpg"
@@ -337,12 +419,12 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
 
         if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
             val file = File(storageDir, vFilename);
-            //File object of camera image
             val uri = FileProvider.getUriForFile(
                 this.requireContext(),
                 this.requireContext().applicationContext.packageName + ".provider",
                 file
             );
+            isPhotoImported = true
             Glide.with(this)
                 .load(uri)
                 .apply(RequestOptions().centerCrop())

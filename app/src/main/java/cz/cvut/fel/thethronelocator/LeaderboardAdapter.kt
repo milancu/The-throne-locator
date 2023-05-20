@@ -53,6 +53,11 @@ class LeaderboardAdapter(private val userList: List<User>?) :
                         .load(user.imgLink)
                         .apply(RequestOptions.bitmapTransform(CircleCrop()))
                         .into(imageView)
+                } else {
+                    Glide.with(this.itemView)
+                        .load(R.drawable.avatar)
+                        .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                        .into(imageView)
                 }
                 if(position == 0){
                     cardView.strokeWidth = 8
