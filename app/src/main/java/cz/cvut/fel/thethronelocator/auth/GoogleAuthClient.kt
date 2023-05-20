@@ -3,14 +3,7 @@ package cz.cvut.fel.thethronelocator.auth
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.graphics.drawable.Drawable
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
@@ -90,7 +83,7 @@ class GoogleAuthClient(
                         userId = uid,
                         username = email,
                         name = displayName,
-                        profilePicture = getUserImage(this),
+                        profilePicture = photoUrl,
                         isAnonymous = isAnonymous,
                         imgUrl = ""
                     )
@@ -132,37 +125,10 @@ class GoogleAuthClient(
             userId = uid,
             username = email,
             name = displayName,
-            profilePicture = getUserImage(this),
+            profilePicture = photoUrl,
             isAnonymous = isAnonymous,
             imgUrl = getUserImageUri(this)
         )
-    }
-
-
-    private fun getUserImage(user: FirebaseUser): Drawable? {
-        var drawable = getDrawable(context, R.drawable.avatar)
-
-        // Set the icon using the photoUrl
-        user.photoUrl?.run {
-            Glide.with(context)
-                .load(this)
-                .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                .into(object : CustomTarget<Drawable>() {
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
-                    ) {
-                        // Set the loaded drawable as the menu item icon
-                        drawable = resource
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        drawable = getDrawable(context, R.drawable.avatar)
-                    }
-                })
-        }
-
-        return drawable
     }
 
     private fun buildSignInRequest(): BeginSignInRequest {

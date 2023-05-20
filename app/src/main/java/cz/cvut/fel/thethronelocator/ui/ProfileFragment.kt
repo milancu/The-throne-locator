@@ -1,16 +1,18 @@
 package cz.cvut.fel.thethronelocator.ui
 
-import UserViewModel
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import cz.cvut.fel.thethronelocator.R
@@ -26,7 +28,6 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
     private lateinit var signInClient: SignInClient
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var savedStateHandle: SavedStateHandle
-    private val userViewModel: UserViewModel by viewModels()
 
     companion object {
         const val LOGOUT_SUCCESSFUL: String = "LOGOUT_SUCCESSFUL"
@@ -71,13 +72,18 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
     private fun showUserDetails() {
         binding.fullName.text = currentUser.name
         binding.username.text = currentUser.username
-        binding.profileImage.setImageDrawable(currentUser.profilePicture)
+        currentUser.profilePicture?.run {
+            Glide.with(requireContext())
+                .load(this)
+                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(binding.profileImage)
+        }
 
         binding.logoutButton.setOnClickListener {
             lifecycleScope.launch {
                 val signInResult = googleAuthClient.signOut()
                 if (signInResult.user != null) {
-                    userViewModel.updateUserData(signInResult.user)
                     navController.popBackStack()
                 } else {
                     Toast.makeText(requireActivity(), signInResult.errorMessage, Toast.LENGTH_SHORT).show()

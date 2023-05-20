@@ -1,6 +1,5 @@
 package cz.cvut.fel.thethronelocator.ui
 
-import UserViewModel
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.identity.Identity
@@ -33,7 +31,6 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
     private lateinit var signInClient: SignInClient
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var database: FirebaseDatabase
-    private val userViewModel: UserViewModel by activityViewModels()
 
     private val userRepository = UserRepository()
     override fun onCreateView(
@@ -65,7 +62,6 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         // Check if user is signed in (non-null)
         val currentUser = googleAuthClient.getUser()
         if (currentUser != null) {
-            userViewModel.updateUserData(currentUser)
             redirect()
         }
     }
@@ -85,7 +81,6 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         lifecycleScope.launch {
             val signInResult = googleAuthClient.signInAnonymously()
             if (signInResult.user != null) {
-                userViewModel.updateUserData(signInResult.user)
                 redirect()
             } else {
                 Toast.makeText(activity, signInResult.errorMessage, Toast.LENGTH_SHORT).show()
@@ -101,7 +96,6 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
                 val signInResult =
                     googleAuthClient.signInWithIntent(result.data ?: return@launch)
                 if (signInResult.user != null) {
-                    userViewModel.updateUserData(signInResult.user)
                     redirect()
                 } else {
                     Toast.makeText(activity, signInResult.errorMessage, Toast.LENGTH_SHORT).show()

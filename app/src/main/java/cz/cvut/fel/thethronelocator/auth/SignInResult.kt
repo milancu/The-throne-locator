@@ -1,6 +1,6 @@
 package cz.cvut.fel.thethronelocator.auth
 
-import android.graphics.drawable.Drawable
+import android.net.Uri
 
 data class SignInResult (
     val user: UserData? = null,
@@ -10,7 +10,7 @@ data class SignInResult (
 data class UserData(
     val userId: String,
     val name: String?,
-    val profilePicture: Drawable?,
+    val profilePicture: Uri?,
     val username: String?,
     val isAnonymous: Boolean,
     val imgUrl:String
