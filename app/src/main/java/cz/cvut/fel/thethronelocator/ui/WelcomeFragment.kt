@@ -62,7 +62,7 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         // Check if user is signed in (non-null)
         val currentUser = googleAuthClient.getUser()
         if (currentUser != null) {
-            redirect()
+            redirect(!googleAuthClient.getUser()!!.isAnonymous)
         }
     }
 
@@ -81,7 +81,7 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         lifecycleScope.launch {
             val signInResult = googleAuthClient.signInAnonymously()
             if (signInResult.user != null) {
-                redirect()
+                redirect(false)
             } else {
                 Toast.makeText(activity, signInResult.errorMessage, Toast.LENGTH_SHORT).show()
             }
@@ -104,43 +104,18 @@ open class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
         }
     }
 
-
-    private fun createUser() {
-        val currentUser = googleAuthClient.getUser()
-        if (currentUser != null) {
-            val userDataRef = database.getReference("users/${currentUser.userId}")
-
-            val currentUserRef = userDataRef.child(currentUser.userId)
-
-            currentUserRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (!dataSnapshot.exists()) {
-                        userDataRef.child("name").setValue(currentUser.name)
-                        userDataRef.child("record").setValue(0)
-                        userDataRef.child("profilePicture").setValue(currentUser.profilePicture)
-                        userDataRef.child("favourites").setValue(null)
-
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "onCancelled: ${databaseError.message}")
-                    Toast.makeText(activity, "Failed to login", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
-    }
-
-    private fun redirect() {
+    private fun redirect(createUser: Boolean? = true) {
         findNavController().navigate(R.id.action_welcomeFragment_to_mainFragment)
-        userRepository.createUser(
-            googleAuthClient = googleAuthClient,
-            onError = {
-                Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
-            },
-            onSuccess = {
+        if (createUser == true) {
+            userRepository.createUser(
+                googleAuthClient = googleAuthClient,
+                onError = {
+                    Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                },
+                onSuccess = {
 
-            }
-        )
+                }
+            )
+        }
     }
 }

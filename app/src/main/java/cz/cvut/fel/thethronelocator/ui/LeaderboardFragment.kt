@@ -16,7 +16,6 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard) {
     private val userRepository = UserRepository()
     private lateinit var binding: FragmentLeaderboardBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,11 +28,13 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val context = context ?: return // Return if fragment is not attached
+
         userRepository.getAllUsers {
             val leaderboardAdapter = LeaderboardAdapter(it?.sortedByDescending { it.record})
             val recyclerView = binding.leaderboardList
             recyclerView.adapter = leaderboardAdapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.layoutManager = LinearLayoutManager(context)
         }
     }
 }

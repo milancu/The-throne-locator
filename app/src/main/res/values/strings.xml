@@ -4,4 +4,5 @@
     <string name="toilet_1">Toilet 1</string>
     <string name="navigate_button">navigate_button</string>
     <string name="navigate">Navigate</string>
+    <string name="errorMissingPhoto">Please add photo of the toilet</string>
 </resources>

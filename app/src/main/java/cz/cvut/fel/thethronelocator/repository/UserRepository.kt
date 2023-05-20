@@ -56,6 +56,7 @@ class UserRepository {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val user = dataSnapshot.getValue(User::class.java)
+                    user?.record = user?.record ?: 0;
                     user!!.id = dataSnapshot.key
                     callback(user)
                 } else {
