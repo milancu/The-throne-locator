@@ -68,7 +68,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.5.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
-    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)

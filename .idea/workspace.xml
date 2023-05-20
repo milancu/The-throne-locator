@@ -9,7 +9,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c0c3d9d-1ce4-419e-9f40-6f6be6c1a8ba" name="Changes" comment="Hide default my location button">
+    <list default="true" id="6c0c3d9d-1ce4-419e-9f40-6f6be6c1a8ba" name="Changes" comment="Remove unused dependencies">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
@@ -385,7 +385,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684584863972</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Remove unused dependencies">
+      <created>1684586502339</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1684586502339</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -416,6 +423,7 @@
     <MESSAGE value="Reminder" />
     <MESSAGE value="Remove sort and distance" />
     <MESSAGE value="Hide default my location button" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hide default my location button" />
+    <MESSAGE value="Remove unused dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove unused dependencies" />
   </component>
 </project>

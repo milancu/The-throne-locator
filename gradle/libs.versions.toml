@@ -24,7 +24,6 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.0.1" }
-firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version = "24.6.0" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version = "20.2.1" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version = "20.2.0" }
 
