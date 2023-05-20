@@ -181,7 +181,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onResume()
         if (permissionDenied) {
             // Permission was not granted, display error dialog.
-            //showMissingPermissionError()
+            showMissingPermissionError()
             permissionDenied = false
         }
     }
@@ -280,18 +280,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 // features are disabled if it's declined. In this UI, include a
                 // "cancel" or "no thanks" button that lets the user continue
                 // using your app without granting the permission.
-                SnackBarUtils.showSnackBarWithAction(
-                    requireView(),
-                    "Location access denied. Enable permissions to zoom to your location.",
-                    "Enable",
-                ) {
-                    requestPermissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        )
-                    )
-                }
+                showMissingPermissionError()
             }
 
             else -> {
@@ -302,6 +291,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     )
                 )
             }
+        }
+    }
+
+    private fun showMissingPermissionError() {
+        SnackBarUtils.showSnackBarWithAction(
+            requireView(),
+            "Location access denied. Enable permissions to zoom to your location.",
+            "Enable",
+        ) {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 
@@ -359,85 +363,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         return dialog.create()
     }
-
-//    private fun createAddNewDialog(context: Context): AlertDialog {
-//        dialogView = LayoutInflater.from(context).inflate(R.layout.add_new_dialog, null)
-//
-//        val dialog = MaterialAlertDialogBuilder(context)
-//            .setTitle("Add new")
-//            .setView(dialogView)
-//            .setNegativeButton("Back") { dialog, which ->
-//                dialog.cancel()
-//            }
-//            .setPositiveButton("Add") { dialog, which ->
-//                dialog.cancel()
-//                //TODO logika
-//
-//                SnackBarUtils.showSnackBarWithCloseButton(
-//                    requireView(),
-//                    "New toilet successfully added"
-//                )
-//            }
-//            .create()
-//
-//        dialog.window?.setLayout(
-//            WindowManager.LayoutParams.MATCH_PARENT,
-//            WindowManager.LayoutParams.WRAP_CONTENT
-//        )
-//        dialog.window?.setGravity(Gravity.CENTER)
-//
-////        val button = dialogView.findViewById<MaterialButton>(R.id.button_choose_from_map)
-////        button.setOnClickListener {
-////            showMapPicker()
-////        }
-////
-////        val openTimeInput = dialogView.findViewById<AutoCompleteTextView>(R.id.time_open_input)
-////        openTimeInput.setOnClickListener {
-////            showTimePicker(openTimeInput)
-////        }
-////        val closeTimeInput = dialogView.findViewById<AutoCompleteTextView>(R.id.time_close_input)
-////        closeTimeInput.setOnClickListener {
-////            showTimePicker(closeTimeInput)
-////        }
-//
-//
-//        return dialog
-//    }
-
-
-    //    private fun showTimePicker(timeInput: AutoCompleteTextView) {
-//        val timePicker = MaterialTimePicker.Builder()
-//            .setTimeFormat(TimeFormat.CLOCK_12H)
-//            .build()
-//
-//        timePicker.addOnPositiveButtonClickListener {
-//            val hour = timePicker.hour
-//            val minute = timePicker.minute
-//            val selectedTime = String.format("%02d:%02d", hour, minute)
-//            timeInput.setText(selectedTime)
-//        }
-//
-//        timePicker.show(this.childFragmentManager, "timePicker")
-//    }
-//
-//    private fun showMapPicker() {
-//        val intent = Intent(this.requireContext(), MapPickerActivity::class.java)
-//        startActivityForResult(intent, MAP_PICKER_REQUEST_CODE)
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == MAP_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            val latitude = data?.getDoubleExtra("latitude", 0.0)
-//            val longitude = data?.getDoubleExtra("longitude", 0.0)
-//
-//            val latitudeInput = dialogView.findViewById<TextInputEditText>(R.id.input_latitude_text)
-//            latitudeInput.setText("$latitude")
-//            val longitudeInput =
-//                dialogView.findViewById<TextInputEditText>(R.id.input_longitude_text)
-//            longitudeInput.setText("$longitude")
-//        }
-//    }
 
     private fun getDeviceLocation() {
         /*

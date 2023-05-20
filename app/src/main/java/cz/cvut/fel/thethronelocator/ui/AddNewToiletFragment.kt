@@ -1,8 +1,10 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -16,8 +18,10 @@ import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.text.toLowerCase
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -53,7 +57,6 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
     private lateinit var importImageview: ImageView
     private var openingTime: LocalTime? = null
     private var closingTime: LocalTime? = null
-    private val PERMISSION_CODE = 1000
     private val IMAGE_CAPTURE_CODE = 1001
     private lateinit var vFilename: String
     private lateinit var storageDir: File
@@ -64,6 +67,10 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
     private lateinit var toiletName: TextInputEditText
     private lateinit var toiletType: AutoCompleteTextView
     private val toiletRepository = ToiletRepository()
+
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private var permissionDenied = false
+    private var permissionGranted = false
 
 
     override fun onCreateView(
@@ -117,10 +124,18 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
             showTimePicker(closeTimeInput, openTimeInput)
         }
         btnImportPhoto.setOnClickListener {
-            openCamera()
+            if (permissionGranted) {
+                openCamera()
+            } else {
+                askForLocationPermission()
+            }
         }
         importImageview.setOnClickListener {
-            openCamera()
+            if (permissionGranted) {
+                openCamera()
+            } else {
+                askForLocationPermission()
+            }
         }
         saveButton.setOnClickListener {
             addToilet()
@@ -139,6 +154,73 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
                 longitudeInput.setText("$longitude")
             }
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    // Enable the my location layer if the permission has been granted.
+                    enableCamera()
+                } else {
+                    // Permission was denied. Display an error message
+                    // Display the missing permission error dialog when the fragments resume.
+                    permissionDenied = true
+                }
+            }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (permissionDenied) {
+            // Permission was not granted, display error dialog.
+            showMissingPermissionError()
+            permissionDenied = false
+        }
+    }
+
+    private fun enableCamera() {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) -> {
+                permissionGranted = true
+            }
+        }
+    }
+
+    private fun askForLocationPermission() {
+        when {
+            shouldShowRequestPermissionRationale(
+                Manifest.permission.CAMERA
+            ) -> {
+                // In an educational UI, explain to the user why your app requires this
+                // permission for a specific feature to behave as expected, and what
+                // features are disabled if it's declined. In this UI, include a
+                // "cancel" or "no thanks" button that lets the user continue
+                // using your app without granting the permission.
+                showMissingPermissionError()
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun showMissingPermissionError() {
+        SnackBarUtils.showSnackBarWithAction(
+            requireView(),
+            "Camera access denied. Enable permissions to take a picture.",
+            "Enable",
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
     }
 
     private fun addToilet() {
@@ -209,26 +291,6 @@ class AddNewToiletFragment : Fragment(R.layout.fragment_add_new_toilet) {
         );
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUrl)
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        //called when user presses ALLOW or DENY from Permission Request Popup
-        when (requestCode) {
-            PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED
-                ) {
-                    openCamera()
-                } else {
-                    Toast.makeText(this.requireContext(), "Permission denied", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
