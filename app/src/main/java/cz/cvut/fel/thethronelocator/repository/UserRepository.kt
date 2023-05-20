@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
+import cz.cvut.fel.thethronelocator.model.Rating
 import cz.cvut.fel.thethronelocator.model.User
 
 class UserRepository {
@@ -58,6 +59,17 @@ class UserRepository {
                     val user = dataSnapshot.getValue(User::class.java)
                     user?.record = user?.record ?: 0;
                     user!!.id = dataSnapshot.key
+
+
+                    val favouritesList: MutableList<String> = mutableListOf()
+                    val favouritesDataSnapshot = dataSnapshot.child("favourites")
+
+                    for (entrySnapshot in favouritesDataSnapshot.children) {
+                        val rating = entrySnapshot.getValue(String::class.java)
+                        favouritesList.add(rating!!)
+                    }
+                    user.favouritesList = favouritesList
+
                     callback(user)
                 } else {
                     Log.d(TAG, "User does not exist")
@@ -82,6 +94,16 @@ class UserRepository {
                     val user = childSnapshot.getValue(User::class.java)
                     user!!.id = childSnapshot.key
                     Log.d(TAG, "onDataChange: ${user!!.name} ${user.id}")
+
+                    val favouritesList: MutableList<String> = mutableListOf()
+                    val favouritesDataSnapshot = dataSnapshot.child("favourites")
+
+                    for (entrySnapshot in favouritesDataSnapshot.children) {
+                        val rating = entrySnapshot.getValue(String::class.java)
+                        favouritesList.add(rating!!)
+                    }
+                    user.favouritesList = favouritesList
+
                     userList.add(user)
                 }
                 Log.d(TAG, "onDataChange: ${userList.size}")
@@ -107,4 +129,37 @@ class UserRepository {
             }
         })
     }
+
+    fun addFavourites(id: String, toiletId: String) {
+        val userDataRef = database.getReference("users/$id")
+        userDataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                userDataRef.child("favourites").push().setValue(toiletId)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, "onCancelled: ${databaseError.message}")
+            }
+        })
+    }
+
+    fun removeFavourites(id: String, toiletId: String) {
+        val userDataRef = database.getReference("users/$id")
+        userDataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (childSnapshot in dataSnapshot.child("favourites").children) {
+                    val value = childSnapshot.getValue(String::class.java)
+                    if (value == toiletId) {
+                        childSnapshot.ref.removeValue()
+                        break
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, "onCancelled: ${databaseError.message}")
+            }
+        })
+    }
+
 }

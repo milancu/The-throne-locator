@@ -7,13 +7,11 @@
 
     <action
         android:id="@+id/action_to_detail"
-        app:destination="@id/toiletDetailFragment"
-        />
+        app:destination="@id/toiletDetailFragment" />
 
     <action
         android:id="@+id/action_to_add_new_toilet"
-        app:destination="@id/addNewToiletFragment"
-        />
+        app:destination="@id/addNewToiletFragment" />
 
     <action
         android:id="@+id/action_to_map_picker"
@@ -23,14 +21,12 @@
         android:id="@+id/mapFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map">
-    </fragment>
+        tools:layout="@layout/fragment_map"></fragment>
     <fragment
         android:id="@+id/toiletListFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ListOfToiletFragment"
         android:label="ToiletListFragment"
-        tools:layout="@layout/fragment_toilet_list">
-    </fragment>
+        tools:layout="@layout/fragment_toilet_list"></fragment>
     <fragment
         android:id="@+id/toiletDetailFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ToiletDetailFragment"
@@ -53,18 +49,17 @@
         android:id="@+id/profileFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/profileGuestFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.ProfileGuestFragment"
         android:label="ProfileGuestFragment"
-        tools:layout="@layout/fragment_profile_guest"/>
+        tools:layout="@layout/fragment_profile_guest" />
     <fragment
         android:id="@+id/addNewToiletFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.AddNewToiletFragment"
         android:label="AddNewToiletFragment"
-        tools:layout="@layout/fragment_add_new_toilet"
-        />
+        tools:layout="@layout/fragment_add_new_toilet" />
     <dialog
         android:id="@+id/mapPickerFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.MapPickerFragment"

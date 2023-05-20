@@ -4,6 +4,6 @@ class User(
     var id:String? = null,
     val name: String? = null,
     var record: Int? = null,
-    val favourites: List<Toilet>? = null,
+    var favouritesList: List<String>? = null,
     val imgLink: String? = null
 )

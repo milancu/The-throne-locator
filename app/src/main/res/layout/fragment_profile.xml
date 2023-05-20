@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="20dp"
-    android:layout_marginTop="88dp"
+    android:layout_marginTop="70dp"
     android:layout_marginRight="20dp">
 
     <LinearLayout
@@ -71,6 +71,22 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="TextView" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/favouriteListCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Favourites()"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18dp"
+            android:layout_marginTop="30dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/favouriteList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
