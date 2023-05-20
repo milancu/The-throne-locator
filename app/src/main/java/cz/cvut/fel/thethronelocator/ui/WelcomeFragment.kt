@@ -1,9 +1,7 @@
 package cz.cvut.fel.thethronelocator.ui
 
 import android.app.Activity
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
 import cz.cvut.fel.thethronelocator.databinding.FragmentWelcomeBinding

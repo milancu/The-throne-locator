@@ -7,7 +7,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
-import cz.cvut.fel.thethronelocator.model.Rating
 import cz.cvut.fel.thethronelocator.model.User
 
 class UserRepository {

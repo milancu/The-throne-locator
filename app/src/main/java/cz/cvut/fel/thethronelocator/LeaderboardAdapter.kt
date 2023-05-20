@@ -59,17 +59,20 @@ class LeaderboardAdapter(private val userList: List<User>?) :
                         .apply(RequestOptions.bitmapTransform(CircleCrop()))
                         .into(imageView)
                 }
-                if(position == 0){
+                if (position == 0) {
                     cardView.strokeWidth = 8
-                    cardView.strokeColor = ContextCompat.getColor(itemView.context, R.color.purple_700)
+                    cardView.strokeColor =
+                        ContextCompat.getColor(itemView.context, R.color.purple_700)
                 }
-                if(position == 1){
+                if (position == 1) {
                     cardView.strokeWidth = 4
-                    cardView.strokeColor = ContextCompat.getColor(itemView.context, R.color.purple_500)
+                    cardView.strokeColor =
+                        ContextCompat.getColor(itemView.context, R.color.purple_500)
                 }
-                if(position == 2){
+                if (position == 2) {
                     cardView.strokeWidth = 4
-                    cardView.strokeColor = ContextCompat.getColor(itemView.context, R.color.purple_200)
+                    cardView.strokeColor =
+                        ContextCompat.getColor(itemView.context, R.color.purple_200)
                 }
             }
         }

@@ -20,7 +20,7 @@ import cz.cvut.fel.thethronelocator.databinding.FragmentProfileGuestBinding
 import cz.cvut.fel.thethronelocator.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class ProfileGuestFragment: Fragment(R.layout.fragment_profile_guest) {
+class ProfileGuestFragment : Fragment(R.layout.fragment_profile_guest) {
     private lateinit var binding: FragmentProfileGuestBinding
     private lateinit var signInClient: SignInClient
     private lateinit var navController: NavController

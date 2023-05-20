@@ -37,8 +37,7 @@
         android:id="@+id/cookieClickerLeaderboardFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.LeaderboardFragment"
         android:label="Toilet Clicker Leaderboard"
-        tools:layout="@layout/fragment_leaderboard">
-    </fragment>
+        tools:layout="@layout/fragment_leaderboard"></fragment>
 
 
     <include app:graph="@navigation/main_nav" />

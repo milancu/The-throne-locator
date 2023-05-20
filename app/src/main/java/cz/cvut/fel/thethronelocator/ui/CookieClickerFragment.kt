@@ -3,7 +3,6 @@ package cz.cvut.fel.thethronelocator.ui
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -13,18 +12,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.material.button.MaterialButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
+import cz.cvut.fel.thethronelocator.databinding.FragmentCookieClickerBinding
 import cz.cvut.fel.thethronelocator.model.User
 import cz.cvut.fel.thethronelocator.repository.UserRepository
-import cz.cvut.fel.thethronelocator.databinding.FragmentCookieClickerBinding
 import kotlin.random.Random
 
 

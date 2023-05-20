@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import cz.cvut.fel.thethronelocator.repository.ToiletRepository
-import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
 
 class FavouritesListAdapter(private val favouriteList: List<String>?) :
     RecyclerView.Adapter<FavouritesListAdapter.ViewHolder>() {

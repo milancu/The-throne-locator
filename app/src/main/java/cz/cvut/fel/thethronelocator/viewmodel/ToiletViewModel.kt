@@ -41,4 +41,28 @@ class ToiletViewModel(private val repository: ToiletRepository) : ViewModel() {
             }
         )
     }
+
+    fun getToiletByName(name: String) {
+        _isLoading.postValue(true)
+        repository.getToilets(
+            onSuccess = {
+
+                val filteredItems = it.filter { toilet ->
+                    toilet.name?.lowercase()?.contains(name.lowercase()) ?: false
+                }.sortedByDescending { item ->
+                    item.name?.countMatches(name.lowercase()) ?: 0
+                }
+                _toilets.postValue(filteredItems)
+                _isLoading.postValue(false)
+            },
+            onError = { message ->
+                _errorMessage.postValue(message)
+                _isLoading.postValue(false)
+            }
+        )
+    }
+
+    private fun String.countMatches(query: String): Int {
+        return this.count { it.equals(query) }
+    }
 }

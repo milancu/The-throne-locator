@@ -13,7 +13,12 @@ object SnackBarUtils {
         snackBar.show()
     }
 
-    fun showSnackBarWithAction(view: View, message: String, actionText: String, listener: OnClickListener ) {
+    fun showSnackBarWithAction(
+        view: View,
+        message: String,
+        actionText: String,
+        listener: OnClickListener
+    ) {
         val snackBar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
         snackBar.setAction(actionText, listener)
         snackBar.show()

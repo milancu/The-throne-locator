@@ -68,10 +68,9 @@ class GoogleAuthClient(
     }
 
 
-    private fun getUserImageUri(user:FirebaseUser):String{
+    private fun getUserImageUri(user: FirebaseUser): String {
         return user.photoUrl.toString()
     }
-
 
 
     private suspend fun executeSignIn(signInAction: suspend () -> FirebaseUser?): SignInResult {
@@ -105,9 +104,9 @@ class GoogleAuthClient(
             oneTapClient.signOut().await()
             auth.signOut()
             signInAnonymously()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
+            if (e is CancellationException) throw e
             Toast.makeText(
                 context,
                 "Something went wrong.",
@@ -140,7 +139,8 @@ class GoogleAuthClient(
                     .setFilterByAuthorizedAccounts(false)
                     // Your server's client ID, not your Android client ID.
                     .setServerClientId(context.getString(R.string.default_web_client_id))
-                    .build())
+                    .build()
+            )
             // Auto-select if only one google account
             .setAutoSelectEnabled(true)
             .build()

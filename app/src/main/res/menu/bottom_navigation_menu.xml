@@ -3,10 +3,10 @@
         android:id="@+id/mapFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_map_24"
-        android:title="Map"/>
+        android:title="Map" />
     <item
         android:id="@+id/toiletListFragment"
         android:enabled="true"
         android:icon="@drawable/baseline_list_24"
-        android:title="List"/>
+        android:title="List" />
 </menu>

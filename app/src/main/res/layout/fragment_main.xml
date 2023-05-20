@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:clipChildren="false"
-    android:clipToPadding="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
 
     <!-- Main content of the activity -->
@@ -18,9 +17,8 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/main_nav" />
 
-    <!-- Search Bar -->
+
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/search_bar_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent">
@@ -29,11 +27,22 @@
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:hint="Hinted search text"
-            app:forceDefaultNavigationOnClickListener="true" />
-
+            android:hint="@string/searchbar_hint" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/searchbar_hint">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/toiletList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp" />
+
+    </com.google.android.material.search.SearchView>
 
     <!-- Bottom navigation view -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

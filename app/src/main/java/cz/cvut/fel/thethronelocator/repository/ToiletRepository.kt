@@ -1,21 +1,13 @@
 package cz.cvut.fel.thethronelocator.repository
 
 import android.content.ContentValues
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
 import cz.cvut.fel.thethronelocator.model.Rating
 import cz.cvut.fel.thethronelocator.model.Toilet
-import cz.cvut.fel.thethronelocator.model.enum.ToiletType
-import java.time.LocalDateTime
 import java.util.UUID
 
 class ToiletRepository {
@@ -78,8 +70,9 @@ class ToiletRepository {
         toiletDataRef.child("ratings").push().setValue(rating)
     }
 
-    fun saveToilet(toilet: Toilet){
-        val toiletDataRef = FirebaseDatabase.getInstance().getReference("toilets/${UUID.randomUUID()}")
+    fun saveToilet(toilet: Toilet) {
+        val toiletDataRef =
+            FirebaseDatabase.getInstance().getReference("toilets/${UUID.randomUUID()}")
         toiletDataRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 toiletDataRef.child("name").setValue(toilet.name)

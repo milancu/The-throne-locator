@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.thethronelocator.LeaderboardAdapter
 import cz.cvut.fel.thethronelocator.R
-import cz.cvut.fel.thethronelocator.databinding.FragmentCookieClickerBinding
 import cz.cvut.fel.thethronelocator.databinding.FragmentLeaderboardBinding
 import cz.cvut.fel.thethronelocator.repository.UserRepository
 
@@ -31,7 +30,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard) {
         val context = context ?: return // Return if fragment is not attached
 
         userRepository.getAllUsers {
-            val leaderboardAdapter = LeaderboardAdapter(it?.sortedByDescending { it.record})
+            val leaderboardAdapter = LeaderboardAdapter(it?.sortedByDescending { it.record })
             val recyclerView = binding.leaderboardList
             recyclerView.adapter = leaderboardAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
