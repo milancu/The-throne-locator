@@ -1,27 +1,38 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.button.MaterialButton
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.RatingAdapter
+import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
 import cz.cvut.fel.thethronelocator.databinding.FragmentDetailBinding
 import cz.cvut.fel.thethronelocator.model.Rating
 import cz.cvut.fel.thethronelocator.model.Toilet
-import cz.cvut.fel.thethronelocator.model.User
+import cz.cvut.fel.thethronelocator.repository.ToiletRepository
 import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
+import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModel
+import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModelFactory
 
 class ToiletDetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
@@ -29,9 +40,13 @@ class ToiletDetailFragment : Fragment() {
     private var longitude: Double = 0.0
 
     private lateinit var dialogView: View
-    private lateinit var reportDialog: AlertDialog
     private lateinit var reminderDialog: AlertDialog
     private lateinit var ratingDialog: AlertDialog
+    private lateinit var viewModel: ToiletDetailViewModel
+    private lateinit var toilet: Toilet
+    private val toiletRepository = ToiletRepository()
+    private lateinit var googleAuthClient: GoogleAuthClient
+    private lateinit var signInClient: SignInClient
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -41,17 +56,21 @@ class ToiletDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindingData()
+        signInClient = Identity.getSignInClient(requireActivity())
+        googleAuthClient = GoogleAuthClient(requireContext(), signInClient)
 
+        val toiletId = arguments?.getString("toiletId")!!
+        val factory = ToiletDetailViewModelFactory(ToiletRepository())
+        viewModel = ViewModelProvider(this, factory)[ToiletDetailViewModel::class.java]
+        viewModel.toilet.observe(viewLifecycleOwner) {
+            toilet = it
+            bindingData()
+        }
+        viewModel.getToilet(toiletId)
 
         val navigateButton = binding.navigateButton
         navigateButton.setOnClickListener {
             openMapWithLocation(latitude, longitude)
-        }
-
-        val reportButton = binding.reportButton
-        reportButton.setOnClickListener {
-            reportDialog.show()
         }
 
         val bookmarkButton = binding.bookmarkButton
@@ -72,15 +91,8 @@ class ToiletDetailFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        reportDialog = createReportDialog(context)
         reminderDialog = createReminderDialog(context)
         ratingDialog = createRatingDialog(context)
-
-        reportDialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        reportDialog.window?.setGravity(Gravity.CENTER)
 
         reminderDialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -96,15 +108,13 @@ class ToiletDetailFragment : Fragment() {
     }
 
     private fun bindingData() {
-        val toiletId = arguments?.getInt("toiletId")
-
-        //---------Need to bind--------------
-        val toiletName: String? = arguments?.getString("name")
-        val toiletRating: Float = 0f
-        val toiletRatings: List<Rating> = getRatingList()
-        latitude = arguments?.getFloat("latitude")!!.toDouble()
-        longitude = arguments?.getFloat("longitude")!!.toDouble()
-        val openingTime: String? = null
+        val toiletName: String? = toilet.name
+        val toiletRating: Float = toilet.getOverAllRating()
+        val toiletRatings: List<Rating>? = toilet.ratingList
+        latitude = toilet.latitude!!
+        longitude = toilet.longitude!!
+        val openingTime: String? = toilet.openingTime
+        val img = toilet.img
         var distance: String? = null
 
         binding.textViewDistance.text = "${distance}km"
@@ -122,10 +132,18 @@ class ToiletDetailFragment : Fragment() {
         binding.textViewDistance.text = "${distance}km"
 
         //binding for toiletRating
+        val overAllRating = toiletRatings?.size ?: 0
         binding.overallToiletRating.rating = toiletRating
+        binding.textViewOverallRating.text = "Rating($overAllRating)"
 
         //binding for openingTime
         binding.textViewOpeningTime.text = openingTime
+
+        val imageView: ImageView = requireView().findViewById(R.id.toilet_image_view)
+        Glide.with(this)
+            .load(img)
+            .apply(RequestOptions().centerCrop())
+            .into(imageView)
 
     }
 
@@ -154,43 +172,6 @@ class ToiletDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Map application is not installed", Toast.LENGTH_SHORT)
                 .show()
         }
-    }
-
-    private fun getRatingList(): List<Rating> {
-        //dummy data
-        //TODO
-        return listOf(
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-            Rating(4.5f, "Great toilet!", User(), Toilet()),
-        )
-    }
-
-    private fun createReportDialog(context: Context): AlertDialog {
-        val dialog = MaterialAlertDialogBuilder(context)
-        val dialogView = layoutInflater.inflate(R.layout.report_dialog, null)
-
-        dialog
-            .setTitle("Report")
-            .setView(dialogView)
-            .setNegativeButton("Back") { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton("Add") { dialog, which ->
-                dialog.cancel()
-                //TODO logika
-
-                SnackBarUtils.showSnackBarWithCloseButton(
-                    requireView(),
-                    "Successfully reported"
-                )
-            }
-            .create()
-
-        return dialog.create()
     }
 
     private fun createReminderDialog(context: Context): AlertDialog {
@@ -229,7 +210,14 @@ class ToiletDetailFragment : Fragment() {
             }
             .setPositiveButton("Add") { dialog, which ->
                 dialog.cancel()
-                //TODO logika
+                Log.d(TAG, "createRatingDialog: ${toilet.id}")
+                toiletRepository.addToiletRating(
+                    toiletId = toilet.id!!,
+                    Rating(
+                        rating = dialogView.findViewById<RatingBar>(R.id.ratingBar).rating,
+                        authorId = googleAuthClient.getUser()?.userId
+                    )
+                )
 
                 SnackBarUtils.showSnackBarWithCloseButton(
                     requireView(),

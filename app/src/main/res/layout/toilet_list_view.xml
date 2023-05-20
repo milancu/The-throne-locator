@@ -2,66 +2,82 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginBottom="8dp">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="-3dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="40dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Media -->
+        <ImageView
+            android:id="@+id/image_toilet_view"
+            android:layout_width="match_parent"
+            android:layout_height="194dp"
+            android:contentDescription="toilet"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/toilet_paper" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="Toilet"
-                android:scaleType="centerCrop"
-                android:src="@drawable/media_foreground" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
+            <!-- Title, secondary and supporting text -->
+            <TextView
+                android:id="@+id/toiletName"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Test temptextu"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/toiletName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/roboto_bold"
-                    android:text="Test temptextu"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textSize="20sp" />
+            <TextView
+                android:id="@+id/toiletDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="TextView"
+                android:textColor="#4A4A4A" />
 
-                <TextView
-                    android:id="@+id/toiletDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="TextView"
-                    android:textColor="#4A4A4A" />
 
-            </LinearLayout>
         </LinearLayout>
 
-        <Space
-            android:layout_width="0dp"
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="button_next"
-            android:layout_marginRight="20dp"
-            app:srcCompat="@drawable/baseline_arrow_forward_24"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_open_detail"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Open" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_navigate_toilet_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Navigate"
+                app:icon="@drawable/baseline_arrow_forward_24" />
+        </LinearLayout>
 
     </LinearLayout>
 

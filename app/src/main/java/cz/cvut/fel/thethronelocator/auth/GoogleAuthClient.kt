@@ -74,6 +74,13 @@ class GoogleAuthClient(
         }
     }
 
+
+    private fun getUserImageUri(user:FirebaseUser):String{
+        return user.photoUrl.toString()
+    }
+
+
+
     private suspend fun executeSignIn(signInAction: suspend () -> FirebaseUser?): SignInResult {
         return try {
             val user = signInAction.invoke()
@@ -85,6 +92,7 @@ class GoogleAuthClient(
                         name = displayName,
                         profilePicture = getUserImage(this),
                         isAnonymous = isAnonymous,
+                        imgUrl = ""
                     )
                 },
                 errorMessage = null
@@ -126,8 +134,10 @@ class GoogleAuthClient(
             name = displayName,
             profilePicture = getUserImage(this),
             isAnonymous = isAnonymous,
+            imgUrl = getUserImageUri(this)
         )
     }
+
 
     private fun getUserImage(user: FirebaseUser): Drawable? {
         var drawable = getDrawable(context, R.drawable.avatar)

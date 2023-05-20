@@ -11,6 +11,11 @@
         />
 
     <action
+        android:id="@+id/action_to_add_new_toilet"
+        app:destination="@id/addNewToiletFragment"
+        />
+
+    <action
         android:id="@+id/action_to_map_picker"
         app:destination="@id/mapPickerFragment" />
 
@@ -22,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/toiletListFragment"
-        android:name="cz.cvut.fel.thethronelocator.ui.ToiletListFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.ListOfToiletFragment"
         android:label="ToiletListFragment"
         tools:layout="@layout/fragment_toilet_list">
     </fragment>
@@ -32,13 +37,13 @@
         android:label="ToiletDetailFragment"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="toiletId"
-            app:argType="integer" />
-        <argument
             android:name="latitude"
             app:argType="float" />
         <argument
             android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="toiletId"
             app:argType="string" />
         <argument
             android:name="longitude"
@@ -54,6 +59,12 @@
         android:name="cz.cvut.fel.thethronelocator.ui.ProfileGuestFragment"
         android:label="ProfileGuestFragment"
         tools:layout="@layout/fragment_profile_guest"/>
+    <fragment
+        android:id="@+id/addNewToiletFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.AddNewToiletFragment"
+        android:label="AddNewToiletFragment"
+        tools:layout="@layout/fragment_add_new_toilet"
+        />
     <dialog
         android:id="@+id/mapPickerFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.MapPickerFragment"

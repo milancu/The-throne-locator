@@ -3,6 +3,7 @@ package cz.cvut.fel.thethronelocator.ui
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -12,8 +13,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.material.button.MaterialButton
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import cz.cvut.fel.thethronelocator.R
+import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
+import cz.cvut.fel.thethronelocator.model.User
+import cz.cvut.fel.thethronelocator.repository.UserRepository
 import cz.cvut.fel.thethronelocator.databinding.FragmentCookieClickerBinding
 import kotlin.random.Random
 
@@ -25,8 +35,13 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
     private var playAgain = true
     private lateinit var countDownTimer: CountDownTimer
     private lateinit var containerLayout: ConstraintLayout
+    private lateinit var signInClient: SignInClient
+    private lateinit var googleAuthClient: GoogleAuthClient
     private var screenWidth: Int = 0
     private var screenHeight: Int = 0
+    private val userRepository = UserRepository()
+    private lateinit var currentUser: User
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +54,27 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        navController = Navigation.findNavController(view)
+        signInClient = Identity.getSignInClient(requireActivity())
+        googleAuthClient = GoogleAuthClient(requireActivity(), signInClient)
         val textCounter = binding.textCounter
         val playButton = binding.buttonPlayAgain
+        val leaderboardButton = binding.buttonShowLeaderBoard
+        val texRecord = binding.textRecord
         containerLayout = binding.cookieClickerLayout
 
+
+        userRepository.getUserById(googleAuthClient.getUser()!!.userId, callback = {
+            if (it != null) {
+                currentUser = it
+                texRecord.text = ("Your highest score: ${currentUser.record}")
+            }
+        })
+
+        leaderboardButton.setOnClickListener {
+            navController.navigate(R.id.action_cookieClicker_to_leaderboard)
+            playAgain = true
+        }
 
         textCounter.setOnClickListener {
             if (!isTimerRunning && playAgain) {
@@ -123,12 +154,14 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
         }
 
         playButton.setOnClickListener {
+            val textView = binding.textViewCanDoBetter
             val textCounter = binding.textCounter
             val textTimer = binding.textTimer
 
             playAgain = true
             clickCount = 0
 
+            textView.visibility = View.GONE
             playButton.visibility = View.GONE
             textCounter.text = 0.toString()
             textTimer.text = 15.toString()
@@ -165,12 +198,24 @@ class CookieClickerFragment : Fragment(R.layout.fragment_cookie_clicker) {
             override fun onFinish() {
                 val playButton = binding.buttonPlayAgain
                 val texRecord = binding.textRecord
+                val textView = binding.textViewCanDoBetter
 
                 isTimerRunning = false
                 playAgain = false
 
+                if (clickCount > currentUser.record!!) {
+                    userRepository.setNewRecord(currentUser.id!!, clickCount)
+                }
+
                 playButton.visibility = View.VISIBLE
-                texRecord.text = ("Your score: ${clickCount.toString()}")
+                if (clickCount > currentUser.record!!) {
+                    texRecord.text = ("Your highest score: $clickCount")
+                    textView.visibility = View.GONE
+
+                } else {
+                    texRecord.text = ("Your highest score: ${currentUser.record}")
+                    textView.visibility = View.VISIBLE
+                }
             }
         }
 

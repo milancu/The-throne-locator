@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="simple_items">
+        <item>In a park</item>
+        <item>Standalone</item>
+        <item>In shopping mall</item>
+    </array>
+</resources>

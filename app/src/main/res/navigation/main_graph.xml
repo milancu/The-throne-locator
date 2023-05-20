@@ -8,7 +8,7 @@
         android:id="@+id/welcomeFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.WelcomeFragment"
         android:label="Welcome"
-        tools:layout="@layout/fragment_welcome" >
+        tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_welcomeFragment_to_mainFragment"
             app:destination="@id/mainFragment"
@@ -19,7 +19,7 @@
         android:id="@+id/mainFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.MainFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_cookieClickerFragment"
             app:destination="@id/cookieClickerFragment" />
@@ -28,7 +28,18 @@
         android:id="@+id/cookieClickerFragment"
         android:name="cz.cvut.fel.thethronelocator.ui.CookieClickerFragment"
         android:label="Toilet Clicker"
-        tools:layout="@layout/fragment_cookie_clicker" />
+        tools:layout="@layout/fragment_cookie_clicker">
+        <action
+            android:id="@+id/action_cookieClicker_to_leaderboard"
+            app:destination="@id/cookieClickerLeaderboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cookieClickerLeaderboardFragment"
+        android:name="cz.cvut.fel.thethronelocator.ui.LeaderboardFragment"
+        android:label="Toilet Clicker Leaderboard"
+        tools:layout="@layout/fragment_leaderboard">
+    </fragment>
+
 
     <include app:graph="@navigation/main_nav" />
 </navigation>

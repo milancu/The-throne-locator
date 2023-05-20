@@ -43,6 +43,9 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.0.1" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version = "24.6.0" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version = "20.2.1" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version = "20.2.0" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "com-android-application" }

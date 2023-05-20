@@ -13,4 +13,5 @@ data class UserData(
     val profilePicture: Drawable?,
     val username: String?,
     val isAnonymous: Boolean,
+    val imgUrl:String
 )
