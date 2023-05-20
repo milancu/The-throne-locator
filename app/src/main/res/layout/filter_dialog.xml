@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:checked="true"
-        android:text="Standlone"/>
+        android:text="Standalone"/>
 
     <CheckBox
         android:id="@+id/checkbox_child_2"
@@ -36,6 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:checked="true"
-        android:text="In Shopping Mail"/>
+        android:text="In Shopping Mall"/>
 
 </LinearLayout>

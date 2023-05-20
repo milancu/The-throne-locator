@@ -1,8 +1,10 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,49 +13,48 @@ import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.ToiletListAdapter
 import cz.cvut.fel.thethronelocator.databinding.FragmentToiletListBinding
-import cz.cvut.fel.thethronelocator.model.Toilet
 import cz.cvut.fel.thethronelocator.model.enum.SortType
 import cz.cvut.fel.thethronelocator.model.enum.ToiletType
 import cz.cvut.fel.thethronelocator.repository.ToiletRepository
-import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
+import cz.cvut.fel.thethronelocator.viewmodel.ToiletViewModel
+import cz.cvut.fel.thethronelocator.viewmodel.ToiletViewModelFactory
 
 
-class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
+class ListOfToiletFragment : Fragment(R.layout.fragment_toilet_list) {
     private lateinit var binding: FragmentToiletListBinding
     private lateinit var navController: NavController
-    private val toiletRepository = ToiletRepository()
     private lateinit var dialogView: View
     private lateinit var filterDialog: AlertDialog
-    private lateinit var addNewDialog: AlertDialog
-    private lateinit var sortDialog: AlertDialog
 
-    private var selectedSortByTmp: SortType = SortType.RATING
-    private var filterByTypeTmp: MutableList<ToiletType> =
+    //    private lateinit var addNewDialog: AlertDialog
+    private lateinit var sortDialog: AlertDialog
+    private lateinit var viewModel: ToiletViewModel
+
+
+    private var selectedSortBy: SortType = SortType.NEAREST
+    private var filterByType: MutableList<ToiletType> =
         listOf(
             ToiletType.IN_A_PARK,
-            ToiletType.IN_SHOPPING_MAIL,
-            ToiletType.STANDLONE
+            ToiletType.IN_SHOPPING_MALL,
+            ToiletType.STANDALONE
         ).toMutableList()
 
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>TADY HODNOTY PRO FILTRACI<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    private var selectedSortBy: SortType = SortType.RATING
-    private var filterByType: List<ToiletType> = emptyList()
-    //>>>>>>>>>>>>>>>>>takze neco jako tohle<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    //>>>>>>>>>>>>>>>>>toiletList.filter { filterByType.contains(it.type) }.sortedBy { it.latitude }//.sortedBy { it.rating }<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    companion object {
+        private const val MAP_PICKER_REQUEST_CODE = 123
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,17 +69,20 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        toiletRepository.loadToilets()
+        val factory = ToiletViewModelFactory(ToiletRepository())
 
-        val toiletList: RecyclerView = binding.toiletList
-        toiletList.layoutManager = LinearLayoutManager(activity)
-        val toiletListAdapter = ToiletListAdapter()
-        toiletList.adapter = toiletListAdapter
+        viewModel = ViewModelProvider(this, factory)[ToiletViewModel::class.java]
+        viewModel.toiletPoints.observe(viewLifecycleOwner) {
+            val toiletAdapter = ToiletListAdapter(it)
+            binding.toiletList.adapter = toiletAdapter
+            binding.toiletList.layoutManager = LinearLayoutManager(requireContext())
 
-        val allToiletsObserver = Observer<List<Toilet>> {
-            toiletListAdapter.submitList(it)
         }
-        toiletRepository.allToilet.observe(viewLifecycleOwner, allToiletsObserver)
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
+        }
+        viewModel.getToiletPoints(filterByType, selectedSortBy)
+
 
         val floatingFilterActionButton = binding.floatingActionButtonFilter
         floatingFilterActionButton.setOnClickListener {
@@ -92,7 +96,7 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
 
         val floatingAddNewActionButton = binding.floatingActionButtonAddNew
         floatingAddNewActionButton.setOnClickListener {
-            addNewDialog.show()
+            navController.navigate(R.id.action_to_add_new_toilet)
         }
 
         navController.currentBackStackEntry?.savedStateHandle
@@ -116,7 +120,6 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
 
         sortDialog = createSortDialog(context)
         filterDialog = createFilterDialog(context)
-        addNewDialog = createAddNewDialog(context)
 
         filterDialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -129,15 +132,11 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         sortDialog.window?.setGravity(Gravity.CENTER)
-
-        addNewDialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        addNewDialog.window?.setGravity(Gravity.CENTER)
     }
 
     private fun createSortDialog(context: Context): AlertDialog {
+        var selectedSortByTmp: SortType = selectedSortBy
+
         val dialog = MaterialAlertDialogBuilder(context)
 
         val dialogView = layoutInflater.inflate(R.layout.sort_dialog, null)
@@ -156,8 +155,8 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             selectedSortByTmp = when (checkedId) {
-                R.id.radio_button_1 -> SortType.RATING
-                R.id.radio_button_2 -> SortType.NEAREST
+                R.id.radio_button_1 -> SortType.NEAREST
+                R.id.radio_button_2 -> SortType.RATING
                 else -> {
                     SortType.RATING
                 }
@@ -171,6 +170,8 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
             }
             .setPositiveButton("Confirm") { dialog, which ->
                 selectedSortBy = selectedSortByTmp
+                Log.d(TAG, "createSortDialog: ${selectedSortBy}")
+                viewModel.getToiletPoints(filterByType, selectedSortBy)
                 dialog.cancel()
             }
 
@@ -186,31 +187,31 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
         val checkBox3 = dialogView.findViewById<CheckBox>(R.id.checkbox_child_3)
 
 
-        checkBox1.isChecked = filterByTypeTmp.contains(ToiletType.STANDLONE)
-        checkBox2.isChecked = filterByTypeTmp.contains(ToiletType.IN_A_PARK)
-        checkBox3.isChecked = filterByTypeTmp.contains(ToiletType.IN_SHOPPING_MAIL)
+        checkBox1.isChecked = filterByType.contains(ToiletType.STANDALONE)
+        checkBox2.isChecked = filterByType.contains(ToiletType.IN_A_PARK)
+        checkBox3.isChecked = filterByType.contains(ToiletType.IN_SHOPPING_MALL)
 
         checkBox1.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                filterByTypeTmp.add(ToiletType.STANDLONE)
+                filterByType.add(ToiletType.STANDALONE)
             } else {
-                filterByTypeTmp.remove(ToiletType.STANDLONE)
+                filterByType.remove(ToiletType.STANDALONE)
             }
         }
 
         checkBox2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                filterByTypeTmp.add(ToiletType.IN_A_PARK)
+                filterByType.add(ToiletType.IN_A_PARK)
             } else {
-                filterByTypeTmp.remove(ToiletType.IN_A_PARK)
+                filterByType.remove(ToiletType.IN_A_PARK)
             }
         }
 
         checkBox3.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                filterByTypeTmp.add(ToiletType.IN_SHOPPING_MAIL)
+                filterByType.add(ToiletType.IN_SHOPPING_MALL)
             } else {
-                filterByTypeTmp.remove(ToiletType.IN_SHOPPING_MAIL)
+                filterByType.remove(ToiletType.IN_SHOPPING_MALL)
             }
         }
         dialog.setTitle("Filter:")
@@ -219,48 +220,10 @@ class ToiletListFragment : Fragment(R.layout.fragment_toilet_list) {
                 dialog.cancel()
             }
             .setPositiveButton("Confirm") { dialog, which ->
-                filterByType = filterByTypeTmp
+                viewModel.getToiletPoints(filterByType, selectedSortBy)
                 dialog.cancel()
             }
 
         return dialog.create()
-    }
-
-    private fun createAddNewDialog(context: Context): AlertDialog {
-        dialogView = LayoutInflater.from(context).inflate(R.layout.add_new_dialog, null)
-
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setTitle("Add new")
-            .setView(dialogView)
-            .setNegativeButton("Back") { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton("Add") { dialog, which ->
-                dialog.cancel()
-                //TODO logika
-
-                SnackBarUtils.showSnackBarWithCloseButton(
-                    requireView().findViewById<View>(R.id.toiletList),
-                    "New toilet successfully added"
-                )
-            }
-            .create()
-
-        dialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        dialog.window?.setGravity(Gravity.CENTER)
-
-        val button = dialogView.findViewById<MaterialButton>(R.id.button_choose_from_map)
-        button.setOnClickListener {
-            showMapPicker()
-        }
-
-        return dialog
-    }
-
-    private fun showMapPicker() {
-        navController.navigate(R.id.action_to_map_picker)
     }
 }

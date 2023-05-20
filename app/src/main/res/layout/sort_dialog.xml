@@ -16,18 +16,19 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:checkedButton="@+id/radio_button_1"
+        android:checkedButton="@+id/radio_button_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RadioButton
             android:id="@+id/radio_button_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Rating"/>
+            android:text="Nearest"/>
         <RadioButton
             android:id="@+id/radio_button_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Nearest"/>
+            android:text="Rating"/>
+
     </RadioGroup>
 </LinearLayout>

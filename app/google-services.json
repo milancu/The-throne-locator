@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "682058939213",
+    "firebase_url": "https://the-throne-locator-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "the-throne-locator",
     "storage_bucket": "the-throne-locator.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "682058939213-cvfgmcgoalfmiqstrb5vmd2vrsa2pbpl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cz.cvut.fel.thethronelocator",
+            "certificate_hash": "03f26f1a3bfc1f8d6c893eed7c9bcfbcea64f448"
+          }
+        },
         {
           "client_id": "682058939213-fae2c5gqa7ot2i4o91huhdnl73qlsqfc.apps.googleusercontent.com",
           "client_type": 1,
