@@ -1,9 +1,15 @@
 package cz.cvut.fel.thethronelocator.ui
 
+import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -14,7 +20,12 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.slider.Slider
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.RatingAdapter
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
@@ -34,7 +46,11 @@ import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
 import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModel
 import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModelFactory
 
+
 class ToiletDetailFragment : Fragment() {
+    private var permissionDenied = false
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private var permissionGranted = false
     private var _binding: FragmentDetailBinding? = null
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
@@ -51,6 +67,9 @@ class ToiletDetailFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    val CHANNEL_ID = "reminder"
+    val CHANNEL_NAME = "Toiler Reminer"
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,10 +105,24 @@ class ToiletDetailFragment : Fragment() {
         addNewButton.setOnClickListener {
             ratingDialog.show()
         }
+
+        createNotificationChannel()
     }
 
+    
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    enableNotifications()
+                } else {
+                    permissionDenied = true
+                }
+            }
 
         reminderDialog = createReminderDialog(context)
         ratingDialog = createRatingDialog(context)
@@ -105,6 +138,37 @@ class ToiletDetailFragment : Fragment() {
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         ratingDialog.window?.setGravity(Gravity.CENTER)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (permissionDenied) {
+            // Permission was not granted, display error dialog.
+            showMissingPermissionError()
+            permissionDenied = false
+        }
+    }
+
+    private fun enableNotifications() {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) -> {
+                permissionGranted = true
+            }
+        }
+    }
+
+    
+    private fun showMissingPermissionError() {
+        SnackBarUtils.showSnackBarWithAction(
+            requireView(),
+            "Notification access denied. Enable permissions to set a reminder.",
+            "Enable",
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun bindingData() {
@@ -151,7 +215,7 @@ class ToiletDetailFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -159,6 +223,22 @@ class ToiletDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel.
+            val mChannel = NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            // Register the channel with the system. You can't change the importance
+            // or other notification behaviors after this.
+            val notificationManager =
+                requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
     }
 
     private fun openMapWithLocation(latitude: Double, longitude: Double) {
@@ -174,28 +254,74 @@ class ToiletDetailFragment : Fragment() {
         }
     }
 
+    
     private fun createReminderDialog(context: Context): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
         val dialogView = layoutInflater.inflate(R.layout.reminder_dialog, null)
 
         dialog
-            .setTitle("Reminder")
+            .setTitle("Set Toilet Reminder")
+            .setMessage("Select the number of minutes before you need a reminder for this toilet visit.")
             .setView(dialogView)
             .setNegativeButton("Back") { dialog, which ->
                 dialog.cancel()
             }
             .setPositiveButton("Add") { dialog, which ->
                 dialog.cancel()
-                //TODO logika
+                val slider = dialogView.findViewById<Slider>(R.id.slider)
+                val delay = slider.value
 
-                SnackBarUtils.showSnackBarWithCloseButton(
-                    requireView(),
-                    "Successfully add a reminder"
-                )
+                if (permissionGranted) {
+                    createNotification(delay)
+                } else {
+                    askForNotificationPermission()
+                }
             }
             .create()
 
         return dialog.create()
+    }
+
+    
+    private fun askForNotificationPermission() {
+        when {
+            shouldShowRequestPermissionRationale(
+                Manifest.permission.POST_NOTIFICATIONS
+            ) -> {
+                // In an educational UI, explain to the user why your app requires this
+                // permission for a specific feature to behave as expected, and what
+                // features are disabled if it's declined. In this UI, include a
+                // "cancel" or "no thanks" button that lets the user continue
+                // using your app without granting the permission.
+                showMissingPermissionError()
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private fun createNotification(delay: Float) {
+        val notification: Notification =
+        NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+            .setSmallIcon(R.drawable.baseline_notifications_24)
+            .setContentTitle("Toilet Reminder")
+            .setContentText("Time to Visit the ${toilet.name}!")
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE).build()
+
+        SnackBarUtils.showSnackBarWithCloseButton(
+            requireView(),
+            "Successfully add a reminder"
+        )
+
+        requireView().postDelayed({
+            with(NotificationManagerCompat.from(requireContext())) {
+                // notificationId is a unique int for each notification that you must define
+
+                notify(1, notification)
+            }
+        }, (delay * 1000 * 60).toLong())
     }
 
     private fun createRatingDialog(context: Context): AlertDialog {
