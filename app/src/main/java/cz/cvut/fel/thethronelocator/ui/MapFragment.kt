@@ -198,6 +198,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
         )
 
+        map.uiSettings.isMyLocationButtonEnabled = false
+
         enableMyLocation()
 
         val metrics = Resources.getSystem().displayMetrics
@@ -396,9 +398,5 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
-    }
-
-    private fun showMapPicker() {
-        navController.navigate(R.id.action_to_map_picker)
     }
 }
