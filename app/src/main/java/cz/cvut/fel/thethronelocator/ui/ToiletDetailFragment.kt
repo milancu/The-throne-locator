@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
@@ -42,6 +43,7 @@ import cz.cvut.fel.thethronelocator.databinding.FragmentDetailBinding
 import cz.cvut.fel.thethronelocator.model.Rating
 import cz.cvut.fel.thethronelocator.model.Toilet
 import cz.cvut.fel.thethronelocator.repository.ToiletRepository
+import cz.cvut.fel.thethronelocator.repository.UserRepository
 import cz.cvut.fel.thethronelocator.utils.SnackBarUtils
 import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModel
 import cz.cvut.fel.thethronelocator.viewmodel.ToiletDetailViewModelFactory
@@ -58,11 +60,13 @@ class ToiletDetailFragment : Fragment() {
     private lateinit var dialogView: View
     private lateinit var reminderDialog: AlertDialog
     private lateinit var ratingDialog: AlertDialog
+    private lateinit var bookMarkButton: CheckBox
     private lateinit var viewModel: ToiletDetailViewModel
     private lateinit var toilet: Toilet
     private val toiletRepository = ToiletRepository()
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var signInClient: SignInClient
+    private val userRepository = UserRepository()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -74,7 +78,6 @@ class ToiletDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         signInClient = Identity.getSignInClient(requireActivity())
         googleAuthClient = GoogleAuthClient(requireContext(), signInClient)
 
@@ -92,9 +95,6 @@ class ToiletDetailFragment : Fragment() {
             openMapWithLocation(latitude, longitude)
         }
 
-        val bookmarkButton = binding.bookmarkButton
-        bookmarkButton.setOnClickListener {
-        }
 
         val notifyButton = binding.notifyButton
         notifyButton.setOnClickListener {
@@ -107,9 +107,40 @@ class ToiletDetailFragment : Fragment() {
         }
 
         createNotificationChannel()
+
+        bookMarkButton = binding.bookmarkButton
+        if (googleAuthClient.getUser()!!.isAnonymous) {
+            bookMarkButton.visibility = View.GONE
+            bookMarkButton.isClickable = false
+        } else {
+            userRepository.getUserById(googleAuthClient.getUser()!!.userId) { user ->
+                val isToiletIdInFavourites = user?.favouritesList?.contains(toiletId) == true
+                bookMarkButton.isChecked = isToiletIdInFavourites
+
+                bookMarkButton.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        user?.id?.let { userId ->
+                            userRepository.addFavourites(userId, toiletId)
+                        }
+                        SnackBarUtils.showSnackBarWithCloseButton(
+                            requireView(),
+                            "Successfully added to favourites"
+                        )
+                    } else {
+                        user?.id?.let { userId ->
+                            userRepository.removeFavourites(userId, toiletId)
+                        }
+                        SnackBarUtils.showSnackBarWithCloseButton(
+                            requireView(),
+                            "Successfully removed from favourites"
+                        )
+                    }
+                }
+            }
+        }
     }
 
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -160,7 +191,7 @@ class ToiletDetailFragment : Fragment() {
         }
     }
 
-    
+
     private fun showMissingPermissionError() {
         SnackBarUtils.showSnackBarWithAction(
             requireView(),
@@ -209,6 +240,7 @@ class ToiletDetailFragment : Fragment() {
             .apply(RequestOptions().centerCrop())
             .into(imageView)
 
+
     }
 
     override fun onCreateView(
@@ -254,7 +286,7 @@ class ToiletDetailFragment : Fragment() {
         }
     }
 
-    
+
     private fun createReminderDialog(context: Context): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
         val dialogView = layoutInflater.inflate(R.layout.reminder_dialog, null)
@@ -282,7 +314,7 @@ class ToiletDetailFragment : Fragment() {
         return dialog.create()
     }
 
-    
+
     private fun askForNotificationPermission() {
         when {
             shouldShowRequestPermissionRationale(
@@ -304,11 +336,11 @@ class ToiletDetailFragment : Fragment() {
 
     private fun createNotification(delay: Float) {
         val notification: Notification =
-        NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-            .setSmallIcon(R.drawable.baseline_notifications_24)
-            .setContentTitle("Toilet Reminder")
-            .setContentText("Time to Visit the ${toilet.name}!")
-            .setCategory(NotificationCompat.CATEGORY_MESSAGE).build()
+            NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.baseline_notifications_24)
+                .setContentTitle("Toilet Reminder")
+                .setContentText("Time to Visit the ${toilet.name}!")
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE).build()
 
         SnackBarUtils.showSnackBarWithCloseButton(
             requireView(),

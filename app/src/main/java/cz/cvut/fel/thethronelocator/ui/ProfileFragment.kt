@@ -9,25 +9,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import cz.cvut.fel.thethronelocator.FavouritesListAdapter
 import cz.cvut.fel.thethronelocator.R
 import cz.cvut.fel.thethronelocator.auth.GoogleAuthClient
 import cz.cvut.fel.thethronelocator.auth.UserData
 import cz.cvut.fel.thethronelocator.databinding.FragmentProfileBinding
+import cz.cvut.fel.thethronelocator.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class ProfileFragment: Fragment(R.layout.fragment_profile) {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var navController: NavController
     private lateinit var currentUser: UserData
     private lateinit var signInClient: SignInClient
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var savedStateHandle: SavedStateHandle
+    private lateinit var favouritesList: RecyclerView
+    private val userRepository = UserRepository()
 
     companion object {
         const val LOGOUT_SUCCESSFUL: String = "LOGOUT_SUCCESSFUL"
@@ -66,6 +72,14 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
             navController.navigate(R.id.profileGuestFragment)
         } else {
             showUserDetails()
+            favouritesList = binding.favouriteList
+            userRepository.getUserById(currentUser.userId, callback = {
+                val favouritesListAdapter = FavouritesListAdapter(it!!.favouritesList)
+                favouritesList.adapter = favouritesListAdapter
+                favouritesList.layoutManager = LinearLayoutManager(context)
+                val count = it.favouritesList?.size ?: 0
+                binding.favouriteListCount.text = "Favourites(${count})"
+            })
         }
     }
 
@@ -86,7 +100,8 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
                 if (signInResult.user != null) {
                     navController.popBackStack()
                 } else {
-                    Toast.makeText(requireActivity(), signInResult.errorMessage, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), signInResult.errorMessage, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
